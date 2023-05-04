@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "autorelog",
+  "version": "${version}",
+  "name": "AutoRelog",
+  "description": "",
+  "authors": [],
+  "contact": {
+    "repo": "https://github.com/scubakay/AutoRelog"
+  },
+  "license": "All-Rights-Reserved",
+  "icon": "assets/autorelog/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "com.scubakay.autorelog.AutoRelogClient"
+    ],
+    "main": [
+      "com.scubakay.autorelog.AutoRelog"
+    ]
+  },
+  "mixins": [
+    "autorelog.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}
