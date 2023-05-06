@@ -1,0 +1,3 @@
+- Try reconnecting every 5 seconds until it works
+- Clean up some stuff
+- Add better logging
