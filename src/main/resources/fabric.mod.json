@@ -8,7 +8,7 @@
   "contact": {
     "repo": "https://github.com/scubakay/AutoRelog"
   },
-  "license": "All-Rights-Reserved",
+  "license": "MIT",
   "icon": "assets/autorelog/icon.png",
   "environment": "client",
   "entrypoints": {
