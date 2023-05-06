@@ -1,3 +1,4 @@
 {
-  "commands.autorelog_activated": "AutoRelog activated"
+  "commands.autorelog_activated": "AutoRelog activated",
+  "commands.autorelog_error_singleplayer": "AutoRelog does not do anything in singleplayer"
 }

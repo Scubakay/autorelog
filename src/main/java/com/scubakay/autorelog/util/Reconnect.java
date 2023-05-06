@@ -28,6 +28,7 @@ public class Reconnect {
     }
 
     public static void deactivate() {
+        AutoRelogClient.LOGGER.info("AutoRelog deactivated");
         active = false;
     }
 

@@ -14,6 +14,10 @@ public class AutoRelogCommand {
     }
 
     private static int run(CommandContext<FabricClientCommandSource> context) {
+        if (context.getSource().getClient().isInSingleplayer()) {
+            context.getSource().getPlayer().sendMessage(Text.translatable("commands.autorelog_error_singleplayer"), false);
+            return 1;
+        }
         Reconnect.activate();
         context.getSource().getPlayer().sendMessage(Text.translatable("commands.autorelog_activated"), false);
         return 1;
