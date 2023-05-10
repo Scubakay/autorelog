@@ -1,3 +1,3 @@
-- Try reconnecting every 5 seconds until it works
-- Clean up some stuff
-- Add better logging
+- Fixes a bug where the mod tried to reconnect before the previous try was finished, resulting in disconnecting the player again
+- Now tries to relog every 30 seconds
+- Added cancel command

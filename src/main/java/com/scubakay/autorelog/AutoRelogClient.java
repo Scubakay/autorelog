@@ -15,6 +15,7 @@ public class AutoRelogClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         ClientPlayConnectionEvents.DISCONNECT.register(Reconnect::register);
+        ClientPlayConnectionEvents.JOIN.register(Reconnect::registerJoinEvent);
         ClientCommandRegistrationCallback.EVENT.register(AutoRelogCommand::register);
     }
 }
