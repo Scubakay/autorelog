@@ -15,8 +15,12 @@ public class Reconnect {
     private ServerInfo server;
     private ServerAddress address;
     private final static long DELAY = 1000 * 30;
-    private Timer timer = new Timer();
+    private Timer timer;
     private boolean active = false;
+
+    public static void registerJoinEvent(ClientPlayNetworkHandler handler, PacketSender ignoredPacketSender, MinecraftClient ignoredMinecraftClient) {
+        Reconnect.getInstance().join(handler);
+    }
 
     private static Reconnect instance;
     public static Reconnect getInstance() {
@@ -26,19 +30,23 @@ public class Reconnect {
         return instance;
     }
 
-    public static void registerJoinEvent(ClientPlayNetworkHandler handler, PacketSender ignoredPacketSender, MinecraftClient ignoredMinecraftClient) {
-        Reconnect.getInstance().join(handler);
+    private Reconnect() {
+        timer = new Timer();
     }
 
     public void activate() {
-        AutoRelogClient.LOGGER.info("AutoRelog activated");
-        active = true;
+        if (!active) {
+            AutoRelogClient.LOGGER.info("AutoRelog activated");
+            active = true;
+        }
     }
 
     public void deactivate() {
-        AutoRelogClient.LOGGER.info("AutoRelog deactivated");
-        timer.cancel();
-        active = false;
+        if (active) {
+            AutoRelogClient.LOGGER.info("AutoRelog deactivated");
+            timer.cancel();
+            active = false;
+        }
     }
 
     public void startReconnecting() {
@@ -51,11 +59,16 @@ public class Reconnect {
     public void join(ClientPlayNetworkHandler handler) {
         server = handler.getServerInfo();
         address = ServerAddress.parse(server.address);
-        timer.cancel();
+        if(active) {
+            AutoRelogClient.LOGGER.info("Relogged to server successfully!");
+            timer.cancel();
+        }
     }
 
     private void scheduleReconnect() {
-        timer = new Timer();
+        if (timer != null) {
+            timer = new Timer();
+        }
         timer.schedule(new TimerTask() {
             @Override
             public void run() {

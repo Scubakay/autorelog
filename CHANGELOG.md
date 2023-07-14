@@ -1,4 +1,1 @@
-- Fixes a bug where the mod tried to reconnect before the previous try was finished, resulting in disconnecting the player again
-- Now tries to relog every 30 seconds
-- Added cancel command
-- Update to 1.20.1
+- Fix issue where the mod wouldn't work when FabricAPI is installed on the server
