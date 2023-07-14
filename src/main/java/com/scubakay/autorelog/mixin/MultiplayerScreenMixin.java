@@ -11,6 +11,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class MultiplayerScreenMixin {
     @Inject(method = "init", at = @At("HEAD"))
     private void injectInit(CallbackInfo ci) {
-        Reconnect.deactivate();
+        Reconnect.getInstance().deactivate();
     }
 }

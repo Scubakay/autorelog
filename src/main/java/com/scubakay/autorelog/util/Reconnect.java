@@ -3,88 +3,68 @@ package com.scubakay.autorelog.util;
 import com.scubakay.autorelog.AutoRelogClient;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screen.ConnectScreen;
+import net.minecraft.client.gui.screen.TitleScreen;
+import net.minecraft.client.gui.screen.multiplayer.MultiplayerScreen;
 import net.minecraft.client.network.*;
-import net.minecraft.network.ClientConnection;
-import net.minecraft.network.NetworkState;
-import net.minecraft.network.packet.c2s.handshake.HandshakeC2SPacket;
-import net.minecraft.network.packet.c2s.login.LoginHelloC2SPacket;
-import net.minecraft.text.Text;
-import org.jetbrains.annotations.Nullable;
 
-import java.net.InetSocketAddress;
-import java.util.Optional;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class Reconnect {
-    private static ServerInfo server;
+    private ServerInfo server;
+    private ServerAddress address;
     private final static long DELAY = 1000 * 30;
-    private static Timer timer = new Timer();
-    private static boolean active = false;
-    private static ClientConnection connection;
+    private Timer timer = new Timer();
+    private boolean active = false;
 
-    public static void activate() {
+    private static Reconnect instance;
+    public static Reconnect getInstance() {
+        if (instance == null) {
+            instance = new Reconnect();
+        }
+        return instance;
+    }
+
+    public static void registerJoinEvent(ClientPlayNetworkHandler handler, PacketSender ignoredPacketSender, MinecraftClient ignoredMinecraftClient) {
+        Reconnect.getInstance().join(handler);
+    }
+
+    public void activate() {
         AutoRelogClient.LOGGER.info("AutoRelog activated");
         active = true;
     }
 
-    public static void deactivate() {
+    public void deactivate() {
         AutoRelogClient.LOGGER.info("AutoRelog deactivated");
         timer.cancel();
         active = false;
     }
 
-    public static void register(ClientPlayNetworkHandler handler, MinecraftClient ignoredClient) {
+    public void startReconnecting() {
         if (active) {
             AutoRelogClient.LOGGER.info(String.format("Auto relogging in %d seconds", DELAY/1000));
-            server = handler.getServerInfo();
             scheduleReconnect();
         }
     }
 
-    public static void registerJoinEvent(ClientPlayNetworkHandler ignoredClientPlayNetworkHandler, PacketSender ignoredPacketSender, MinecraftClient ignoredMinecraftClient) {
+    public void join(ClientPlayNetworkHandler handler) {
+        server = handler.getServerInfo();
+        address = ServerAddress.parse(server.address);
         timer.cancel();
     }
 
-    private static void scheduleReconnect() {
+    private void scheduleReconnect() {
         timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                connect(MinecraftClient.getInstance(), ServerAddress.parse(server.address), server);
+                MinecraftClient.getInstance().execute(Reconnect.getInstance()::connect);
             }
         }, DELAY, DELAY);
     }
 
-    private static void connect(final MinecraftClient client, final ServerAddress address, @Nullable final ServerInfo info) {
-        AutoRelogClient.LOGGER.info(String.format("Trying to connect to server: %s (%s)", server.name, server.address));
-
-        Screen screen = client.currentScreen;
-        InetSocketAddress inetSocketAddress;
-        if (connection != null) {
-            connection.disconnect(Text.literal("Disconnecting before trying again"));
-        }
-
-        try {
-            Optional<InetSocketAddress> optional = AllowedAddressResolver.DEFAULT.resolve(address).map(Address::getInetSocketAddress);
-
-            if (optional.isEmpty()) {
-                AutoRelogClient.LOGGER.info("Couldn't resolve server address");
-                return;
-            }
-
-            inetSocketAddress = optional.get();
-            connection = ClientConnection.connect(inetSocketAddress, client.options.shouldUseNativeTransport());
-            connection.setPacketListener(new ClientLoginNetworkHandler(connection, client, info, screen, false, null, Reconnect::setStatus));
-            connection.send(new HandshakeC2SPacket(inetSocketAddress.getHostName(), inetSocketAddress.getPort(), NetworkState.LOGIN));
-            connection.send(new LoginHelloC2SPacket(client.getSession().getUsername(), Optional.ofNullable(client.getSession().getUuidOrNull())));
-        } catch (Exception exception) {
-            AutoRelogClient.LOGGER.info(String.format("Couldn't connect to server: %s", exception.getCause()));
-        }
-    }
-
-    private static void setStatus(Text status) {
-        AutoRelogClient.LOGGER.info(status.getString());
+    public void connect() {
+        ConnectScreen.connect(new MultiplayerScreen(new TitleScreen()), MinecraftClient.getInstance(), address, server, false);
     }
 }

@@ -30,7 +30,7 @@ public class AutoRelogCommand {
             context.getSource().getPlayer().sendMessage(Text.translatable("commands.autorelog_error_singleplayer"), false);
             return 1;
         }
-        Reconnect.activate();
+        Reconnect.getInstance().activate();
         context.getSource().getPlayer().sendMessage(Text.translatable("commands.autorelog_activated"), false);
         return 1;
     }
@@ -40,7 +40,7 @@ public class AutoRelogCommand {
             context.getSource().getPlayer().sendMessage(Text.translatable("commands.autorelog_error_singleplayer"), false);
             return 1;
         }
-        Reconnect.deactivate();
+        Reconnect.getInstance().deactivate();
         context.getSource().getPlayer().sendMessage(Text.translatable("commands.autorelog_deactivated"), false);
         return 1;
     }
