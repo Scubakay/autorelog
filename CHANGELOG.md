@@ -1,1 +1,1 @@
-- Fix issue where the mod wouldn't work when FabricAPI is installed on the server
+- Updated to 1.20.2
