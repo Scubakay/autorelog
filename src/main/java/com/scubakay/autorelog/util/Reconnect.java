@@ -14,7 +14,8 @@ import java.util.TimerTask;
 public class Reconnect {
     private ServerInfo server;
     private ServerAddress address;
-    private final static long DELAY = 1000L * AutoRelogClient.CONFIG.timeBeforeReconnecting;
+    private final static long DELAY = 1000L * AutoRelogClient.CONFIG.getDelay();
+    private final static long INTERVAL = 1000L * AutoRelogClient.CONFIG.getInterval();
     private Timer timer;
     private boolean active = false;
 
@@ -51,7 +52,7 @@ public class Reconnect {
 
     public void startReconnecting() {
         if (active) {
-            AutoRelogClient.LOGGER.info(String.format("Auto relogging in %d seconds", AutoRelogClient.CONFIG.timeBeforeReconnecting));
+            AutoRelogClient.LOGGER.info(String.format("Auto relogging every %d seconds in %d seconds", AutoRelogClient.CONFIG.getInterval(), AutoRelogClient.CONFIG.getDelay()));
             scheduleReconnect();
         }
     }
@@ -74,7 +75,7 @@ public class Reconnect {
             public void run() {
                 MinecraftClient.getInstance().execute(Reconnect.getInstance()::connect);
             }
-        }, DELAY, DELAY);
+        }, DELAY, INTERVAL);
     }
 
     public void connect() {
