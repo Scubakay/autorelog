@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 
 public class Config {
-    private final static int DEFAULT_DELAY = 30;
+    private final static int DEFAULT_DELAY = 60;
     private final static int DEFAULT_INTERVAL = 30;
 
     private int delay;
