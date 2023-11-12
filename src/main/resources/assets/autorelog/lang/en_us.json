@@ -1,5 +1,7 @@
 {
   "commands.autorelog_activated": "AutoRelog activated",
   "commands.autorelog_deactivated": "AutoRelog deactivated",
-  "commands.autorelog_error_singleplayer": "AutoRelog does not do anything in singleplayer"
+  "commands.autorelog_error_singleplayer": "AutoRelog does not do anything in singleplayer",
+  "commands.autorelog_delay_changed": "Changed AutoRelog delay to %d seconds",
+  "commands.autorelog_interval_changed": "Changed AutoRelog interval to %d seconds"
 }

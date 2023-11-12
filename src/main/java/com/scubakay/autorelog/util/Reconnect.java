@@ -14,9 +14,11 @@ import java.util.TimerTask;
 public class Reconnect {
     private ServerInfo server;
     private ServerAddress address;
-    private final static long DELAY = 1000 * 30;
+    private final static long DELAY = 1000L * AutoRelogClient.CONFIG.getDelay();
+    private final static long INTERVAL = 1000L * AutoRelogClient.CONFIG.getInterval();
     private Timer timer;
     private boolean active = false;
+    private boolean reconnecting = false;
 
     public static void registerJoinEvent(ClientPlayNetworkHandler handler, PacketSender ignoredPacketSender, MinecraftClient ignoredMinecraftClient) {
         Reconnect.getInstance().join(handler);
@@ -50,9 +52,10 @@ public class Reconnect {
     }
 
     public void startReconnecting() {
-        if (active) {
-            AutoRelogClient.LOGGER.info(String.format("Auto relogging in %d seconds", DELAY/1000));
+        if (active && !reconnecting) {
+            AutoRelogClient.LOGGER.info(String.format("Auto relogging every %d seconds in %d seconds", AutoRelogClient.CONFIG.getInterval(), AutoRelogClient.CONFIG.getDelay()));
             scheduleReconnect();
+            reconnecting = true;
         }
     }
 
@@ -60,6 +63,7 @@ public class Reconnect {
         server = handler.getServerInfo();
         address = ServerAddress.parse(server.address);
         if(active) {
+            reconnecting = false;
             AutoRelogClient.LOGGER.info("Relogged to server successfully!");
             timer.cancel();
         }
@@ -72,9 +76,10 @@ public class Reconnect {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
+                AutoRelogClient.LOGGER.info("Trying to reconnect...");
                 MinecraftClient.getInstance().execute(Reconnect.getInstance()::connect);
             }
-        }, DELAY, DELAY);
+        }, DELAY, INTERVAL);
     }
 
     public void connect() {
