@@ -14,7 +14,7 @@ import java.util.TimerTask;
 public class Reconnect {
     private ServerInfo server;
     private ServerAddress address;
-    private final static long DELAY = 1000 * 30;
+    private final static long DELAY = 1000L * AutoRelogClient.CONFIG.timeBeforeReconnecting;
     private Timer timer;
     private boolean active = false;
 
@@ -51,7 +51,7 @@ public class Reconnect {
 
     public void startReconnecting() {
         if (active) {
-            AutoRelogClient.LOGGER.info(String.format("Auto relogging in %d seconds", DELAY/1000));
+            AutoRelogClient.LOGGER.info(String.format("Auto relogging in %d seconds", AutoRelogClient.CONFIG.timeBeforeReconnecting));
             scheduleReconnect();
         }
     }
