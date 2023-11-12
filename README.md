@@ -9,4 +9,6 @@ A mod that lets you automatically reconnect to a restarting Minecraft server whe
 ## Usage
 
 - Type `/autorelog` to activate automatic reconnection after 60 seconds.
+- Use `/autorelog delay <delay>` to set the amount of time in seconds AutoRelog should wait before trying to reconnect.
+- Use `/autorelog interval <interval>` to set the interval between reconnection attempts.
 - Disconnect through the pause menu to deactivate.
