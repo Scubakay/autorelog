@@ -1,1 +1,1 @@
-- Fix issue where the mod wouldn't work when FabricAPI is installed on the server
+- Add command completion with current values for delay and interval
