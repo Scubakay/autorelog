@@ -14,9 +14,6 @@
   "entrypoints": {
     "client": [
       "com.scubakay.autorelog.AutoRelogClient"
-    ],
-    "main": [
-      "com.scubakay.autorelog.AutoRelog"
     ]
   },
   "mixins": [
