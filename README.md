@@ -6,7 +6,13 @@
 
 A mod that lets you automatically reconnect to a restarting Minecraft server when AFK.
 
+Make sure to have proper overflow protection in your farms!
+
 ## Usage
 
 - Type `/autorelog` to activate automatic reconnection after 60 seconds.
-- Disconnect through the pause menu to deactivate.
+- Use `/autorelog delay` <delay> to set the amount of time in seconds AutoRelog should wait before trying to reconnect.
+- Use `/autorelog interval <interval>` to set the interval between reconnection attempts.
+- Disconnect through the pause menu or use `/autorelog cancel` to deactivate.
+
+Delay and interval can also be changed in the config file (autorelog.conf).
