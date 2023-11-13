@@ -6,6 +6,8 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.tree.ArgumentCommandNode;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.scubakay.autorelog.AutoRelogClient;
+import com.scubakay.autorelog.commands.suggestions.DelaySuggestionProvider;
+import com.scubakay.autorelog.commands.suggestions.IntervalSuggestionProvider;
 import com.scubakay.autorelog.util.Reconnect;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
@@ -26,6 +28,7 @@ public class AutoRelogCommand {
 
         ArgumentCommandNode<FabricClientCommandSource, Integer> delayArgumentNode = ClientCommandManager
                 .argument("delay", IntegerArgumentType.integer())
+                .suggests(new DelaySuggestionProvider())
                 .executes(ctx -> delay(ctx, IntegerArgumentType.getInteger(ctx, "delay")))
                 .build();
 
@@ -36,6 +39,7 @@ public class AutoRelogCommand {
 
         ArgumentCommandNode<FabricClientCommandSource, Integer> intervalArgumentNode = ClientCommandManager
                 .argument("interval", IntegerArgumentType.integer())
+                .suggests(new IntervalSuggestionProvider())
                 .executes(ctx -> interval(ctx, IntegerArgumentType.getInteger(ctx, "interval")))
                 .build();
 
@@ -60,7 +64,7 @@ public class AutoRelogCommand {
     private static int autorelog(CommandContext<FabricClientCommandSource> context) {
         if (context.getSource().getClient().isInSingleplayer()) {
             context.getSource().getPlayer().sendMessage(Text.translatable("commands.autorelog_error_singleplayer"), false);
-            return 1;
+            return -1;
         }
         Reconnect.getInstance().activate();
         context.getSource().getPlayer().sendMessage(Text.translatable("commands.autorelog_activated"), false);
@@ -70,7 +74,7 @@ public class AutoRelogCommand {
     private static int cancel(CommandContext<FabricClientCommandSource> context) {
         if (context.getSource().getClient().isInSingleplayer()) {
             context.getSource().getPlayer().sendMessage(Text.translatable("commands.autorelog_error_singleplayer"), false);
-            return 1;
+            return -1;
         }
         Reconnect.getInstance().deactivate();
         context.getSource().getPlayer().sendMessage(Text.translatable("commands.autorelog_deactivated"), false);
