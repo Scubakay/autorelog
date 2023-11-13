@@ -39,11 +39,8 @@ jobs:
       - name: Publish Github/Modrinth
         uses: Kir-Antipov/mc-publish@v3.2
         with:
-          version-type: beta
           changelog-file: CHANGELOG.md
           java: "${{env.JAVA_VERSION}}"
-
-          github-token: "${{env.GITHUB_TOKEN}}"
 
           modrinth-id: PZILPxJ6
           modrinth-token: "${{env.MODRINTH_TOKEN}}"
