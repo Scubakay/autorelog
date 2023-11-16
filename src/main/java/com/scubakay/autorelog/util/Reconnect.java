@@ -48,6 +48,7 @@ public class Reconnect {
             AutoRelogClient.LOGGER.info("AutoRelog deactivated");
             timer.cancel();
             active = false;
+            reconnecting = false;
         }
     }
 
