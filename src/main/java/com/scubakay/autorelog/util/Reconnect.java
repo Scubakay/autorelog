@@ -19,6 +19,7 @@ public class Reconnect {
     private Timer timer;
     private boolean active = false;
     private boolean reconnecting = false;
+    private int attemptsLeft = 0;
 
     public static void registerJoinEvent(ClientPlayNetworkHandler handler, PacketSender ignoredPacketSender, MinecraftClient ignoredMinecraftClient) {
         Reconnect.getInstance().join(handler);
@@ -54,9 +55,20 @@ public class Reconnect {
 
     public void startReconnecting() {
         if (active && !reconnecting) {
+            attemptsLeft = AutoRelogClient.CONFIG.getMaxAttempts();
             AutoRelogClient.LOGGER.info(String.format("Auto relogging every %d seconds in %d seconds", AutoRelogClient.CONFIG.getInterval(), AutoRelogClient.CONFIG.getDelay()));
             scheduleReconnect();
             reconnecting = true;
+        } else if(active && reconnecting && AutoRelogClient.CONFIG.getMaxAttempts() > 0) {
+            attemptsLeft--;
+            if (attemptsLeft == 0) {
+                AutoRelogClient.LOGGER.info("Failed all reconnection attempts, stopping...");
+                deactivate();
+            } else {
+                AutoRelogClient.LOGGER.info(String.format("Failed to connect. Trying again in %d seconds with %d attempts left.", AutoRelogClient.CONFIG.getInterval(), attemptsLeft));
+            }
+        } else if(active && reconnecting) {
+            AutoRelogClient.LOGGER.info(String.format("Failed to connect. Trying again in %d seconds.", AutoRelogClient.CONFIG.getInterval()));
         }
     }
 
@@ -77,13 +89,13 @@ public class Reconnect {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                AutoRelogClient.LOGGER.info("Trying to reconnect...");
                 MinecraftClient.getInstance().execute(Reconnect.getInstance()::connect);
             }
         }, DELAY, INTERVAL);
     }
 
     public void connect() {
+        AutoRelogClient.LOGGER.info("Trying to reconnect...");
         ConnectScreen.connect(new MultiplayerScreen(new TitleScreen()), MinecraftClient.getInstance(), address, server, false);
     }
 }

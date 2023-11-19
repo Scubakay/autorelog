@@ -8,6 +8,7 @@ import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.scubakay.autorelog.AutoRelogClient;
 import com.scubakay.autorelog.commands.suggestions.DelaySuggestionProvider;
 import com.scubakay.autorelog.commands.suggestions.IntervalSuggestionProvider;
+import com.scubakay.autorelog.commands.suggestions.MaxAttemptsSuggestionProvider;
 import com.scubakay.autorelog.util.Reconnect;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
@@ -23,7 +24,10 @@ public class AutoRelogCommand {
 
         LiteralCommandNode<FabricClientCommandSource> delayNode = ClientCommandManager
                 .literal("delay")
-                .executes(AutoRelogCommand::autorelog)
+                .build();
+
+        LiteralCommandNode<FabricClientCommandSource> configNode = ClientCommandManager
+                .literal("config")
                 .build();
 
         ArgumentCommandNode<FabricClientCommandSource, Integer> delayArgumentNode = ClientCommandManager
@@ -34,13 +38,22 @@ public class AutoRelogCommand {
 
         LiteralCommandNode<FabricClientCommandSource> intervalNode = ClientCommandManager
                 .literal("interval")
-                .executes(AutoRelogCommand::autorelog)
                 .build();
 
         ArgumentCommandNode<FabricClientCommandSource, Integer> intervalArgumentNode = ClientCommandManager
                 .argument("interval", IntegerArgumentType.integer())
                 .suggests(new IntervalSuggestionProvider())
                 .executes(ctx -> interval(ctx, IntegerArgumentType.getInteger(ctx, "interval")))
+                .build();
+
+        LiteralCommandNode<FabricClientCommandSource> maxAttemptsNode = ClientCommandManager
+                .literal("maxAttempts")
+                .build();
+
+        ArgumentCommandNode<FabricClientCommandSource, Integer> maxAttemptsArgumentNode = ClientCommandManager
+                .argument("maxAttempts", IntegerArgumentType.integer())
+                .suggests(new MaxAttemptsSuggestionProvider())
+                .executes(ctx -> maxAttempts(ctx, IntegerArgumentType.getInteger(ctx, "maxAttempts")))
                 .build();
 
         LiteralCommandNode<FabricClientCommandSource> cancelNode = ClientCommandManager
@@ -50,13 +63,20 @@ public class AutoRelogCommand {
 
         dispatcher.getRoot().addChild(autoRelogNode);
 
+        // Add config node
+        autoRelogNode.addChild(configNode);
+
         // Add delay config node
-        autoRelogNode.addChild(delayNode);
+        configNode.addChild(delayNode);
         delayNode.addChild(delayArgumentNode);
 
         // Add delay config node
-        autoRelogNode.addChild(intervalNode);
+        configNode.addChild(intervalNode);
         intervalNode.addChild(intervalArgumentNode);
+
+        // Add max attempts config node
+        configNode.addChild(maxAttemptsNode);
+        maxAttemptsNode.addChild(maxAttemptsArgumentNode);
 
         autoRelogNode.addChild(cancelNode);
     }
@@ -90,6 +110,12 @@ public class AutoRelogCommand {
     private static int interval(CommandContext<FabricClientCommandSource> context, int interval) {
         AutoRelogClient.CONFIG.setInterval(interval);
         context.getSource().getPlayer().sendMessage(Text.translatable("commands.autorelog_interval_changed", interval), false);
+        return 1;
+    }
+
+    private static int maxAttempts(CommandContext<FabricClientCommandSource> context, int maxAttempts) {
+        AutoRelogClient.CONFIG.setMaxAttempts(maxAttempts);
+        context.getSource().getPlayer().sendMessage(Text.translatable("commands.autorelog_max_attempts_changed", maxAttempts), false);
         return 1;
     }
 }
