@@ -102,18 +102,30 @@ public class AutoRelogCommand {
     }
 
     private static int delay(CommandContext<FabricClientCommandSource> context, int delay) {
+        if (delay < 1) {
+            context.getSource().getPlayer().sendMessage(Text.translatable("commands.config_error_delay"), false);
+            return -1;
+        }
         AutoRelogClient.CONFIG.setDelay(delay);
         context.getSource().getPlayer().sendMessage(Text.translatable("commands.autorelog_delay_changed", delay), false);
         return 1;
     }
 
     private static int interval(CommandContext<FabricClientCommandSource> context, int interval) {
+        if (interval < 1) {
+            context.getSource().getPlayer().sendMessage(Text.translatable("commands.config_error_interval"), false);
+            return -1;
+        }
         AutoRelogClient.CONFIG.setInterval(interval);
         context.getSource().getPlayer().sendMessage(Text.translatable("commands.autorelog_interval_changed", interval), false);
         return 1;
     }
 
     private static int maxAttempts(CommandContext<FabricClientCommandSource> context, int maxAttempts) {
+        if (maxAttempts < 0) {
+            context.getSource().getPlayer().sendMessage(Text.translatable("commands.config_error_max_attempts"), false);
+            return -1;
+        }
         AutoRelogClient.CONFIG.setMaxAttempts(maxAttempts);
         context.getSource().getPlayer().sendMessage(Text.translatable("commands.autorelog_max_attempts_changed", maxAttempts), false);
         return 1;
