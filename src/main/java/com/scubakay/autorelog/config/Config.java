@@ -11,9 +11,11 @@ import java.nio.file.Path;
 public class Config {
     private final static int DEFAULT_DELAY = 60;
     private final static int DEFAULT_INTERVAL = 30;
+    private final static int DEFAULT_MAX_ATTEMPTS = 5;
 
     private int delay;
     private int interval;
+    private int maxAttempts;
 
     public int getDelay() {
         return delay;
@@ -33,6 +35,15 @@ public class Config {
         save();
     }
 
+    public int getMaxAttempts() {
+        return maxAttempts;
+    }
+
+    public void setMaxAttempts(int maxAttempts) {
+        this.maxAttempts = maxAttempts;
+        save();
+    }
+
     final HoconConfigurationLoader loader = HoconConfigurationLoader.builder()
             .path(Path.of("config/autorelog.conf"))
             .build();
@@ -49,10 +60,12 @@ public class Config {
             if (root.empty()) {
                 delay = DEFAULT_DELAY;
                 interval = DEFAULT_INTERVAL;
+                maxAttempts = DEFAULT_MAX_ATTEMPTS;
                 AutoRelogClient.LOGGER.info("No AutoRelog config found, loading default");
             } else {
                 delay = root.node("delay").empty() ? DEFAULT_DELAY : root.node("delay").getInt();
                 interval = root.node("interval").empty() ? DEFAULT_INTERVAL : root.node("interval").getInt();
+                maxAttempts = root.node("maxAttempts").empty() ? DEFAULT_MAX_ATTEMPTS : root.node("maxAttempts").getInt();
                 AutoRelogClient.LOGGER.info("Loaded AutoRelog config");
             }
             save();
@@ -66,8 +79,9 @@ public class Config {
 
     private void save() {
         try {
-            root.node("delay").set(Integer.class, delay);
-            root.node("interval").set(Integer.class, interval);
+            root.node("delay").set(Integer.class, delay).comment("Delay must be higher than 1");
+            root.node("interval").set(Integer.class, interval).comment("Interval must be higher than 1");
+            root.node("maxAttempts").set(Integer.class, maxAttempts).comment("Max attempts must be higher than 0. Set to 0 for infinite attempts");
             loader.save(root);
         } catch (final ConfigurateException e) {
             AutoRelogClient.LOGGER.info("Unable to save your AutoRelog configuration! Sorry! " + e.getMessage());

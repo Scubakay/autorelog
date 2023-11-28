@@ -1,1 +1,4 @@
-- Updated to 1.20.2
+- Add command completion with current values for delay and interval
+- Add config to set max amount of reconnection attempts
+- Config commands now reside under `/autorelog config`
+- Now out of beta, pretty sure it's working as intended. Please report any issues on Github!
