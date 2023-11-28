@@ -79,9 +79,9 @@ public class Config {
 
     private void save() {
         try {
-            root.node("delay").set(Integer.class, delay);
-            root.node("interval").set(Integer.class, interval);
-            root.node("maxAttempts").set(Integer.class, maxAttempts);
+            root.node("delay").set(Integer.class, delay).comment("Delay must be higher than 1");
+            root.node("interval").set(Integer.class, interval).comment("Interval must be higher than 1");
+            root.node("maxAttempts").set(Integer.class, maxAttempts).comment("Max attempts must be higher than 0. Set to 0 for infinite attempts");
             loader.save(root);
         } catch (final ConfigurateException e) {
             AutoRelogClient.LOGGER.info("Unable to save your AutoRelog configuration! Sorry! " + e.getMessage());
