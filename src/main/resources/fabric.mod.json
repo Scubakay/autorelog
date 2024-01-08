@@ -20,7 +20,7 @@
     "autorelog.mixins.json"
   ],
   "depends": {
-    "fabricloader": ">=${loader_version}",
+    "fabricloader": ">=0.12.23",
     "fabric-api": "*",
     "minecraft": "${minecraft_version}"
   }
