@@ -61,6 +61,11 @@ public class AutoRelogCommand {
                 .executes(AutoRelogCommand::cancel)
                 .build();
 
+        LiteralCommandNode<FabricClientCommandSource> loggingNode = ClientCommandManager
+                .literal("logging")
+                .executes(AutoRelogCommand::logging)
+                .build();
+
         dispatcher.getRoot().addChild(autoRelogNode);
 
         // Add config node
@@ -128,6 +133,12 @@ public class AutoRelogCommand {
         }
         AutoRelogClient.CONFIG.setMaxAttempts(maxAttempts);
         context.getSource().getPlayer().sendMessage(Text.translatable("commands.autorelog_max_attempts_changed", maxAttempts), false);
+        return 1;
+    }
+
+    private static int logging(CommandContext<FabricClientCommandSource> context) {
+        AutoRelogClient.CONFIG.setLogging(!AutoRelogClient.CONFIG.isLogging());
+        context.getSource().getPlayer().sendMessage(Text.translatable("commands.logging.toggled", AutoRelogClient.CONFIG.isLogging() ? "Enabled" : "Disabled"), false);
         return 1;
     }
 }

@@ -39,14 +39,14 @@ public class Reconnect {
 
     public void activate() {
         if (!active) {
-            AutoRelogClient.LOGGER.info("AutoRelog activated");
+            if(AutoRelogClient.CONFIG.isLogging()) AutoRelogClient.LOGGER.info("AutoRelog activated");
             active = true;
         }
     }
 
     public void deactivate() {
         if (active) {
-            AutoRelogClient.LOGGER.info("AutoRelog deactivated");
+            if(AutoRelogClient.CONFIG.isLogging()) AutoRelogClient.LOGGER.info("AutoRelog deactivated");
             timer.cancel();
             active = false;
             reconnecting = false;
@@ -56,19 +56,19 @@ public class Reconnect {
     public void startReconnecting() {
         if (active && !reconnecting) {
             attemptsLeft = AutoRelogClient.CONFIG.getMaxAttempts();
-            AutoRelogClient.LOGGER.info(String.format("Auto relogging every %d seconds in %d seconds", AutoRelogClient.CONFIG.getInterval(), AutoRelogClient.CONFIG.getDelay()));
+            if(AutoRelogClient.CONFIG.isLogging()) AutoRelogClient.LOGGER.info(String.format("Auto relogging every %d seconds in %d seconds", AutoRelogClient.CONFIG.getInterval(), AutoRelogClient.CONFIG.getDelay()));
             scheduleReconnect();
             reconnecting = true;
         } else if(active && reconnecting && AutoRelogClient.CONFIG.getMaxAttempts() > 0) {
             attemptsLeft--;
             if (attemptsLeft == 0) {
-                AutoRelogClient.LOGGER.info("Failed all reconnection attempts, stopping...");
+                if(AutoRelogClient.CONFIG.isLogging()) AutoRelogClient.LOGGER.info("Failed all reconnection attempts, stopping...");
                 deactivate();
             } else {
-                AutoRelogClient.LOGGER.info(String.format("Failed to connect. Trying again in %d seconds with %d attempts left.", AutoRelogClient.CONFIG.getInterval(), attemptsLeft));
+                if(AutoRelogClient.CONFIG.isLogging()) AutoRelogClient.LOGGER.info(String.format("Failed to connect. Trying again in %d seconds with %d attempts left.", AutoRelogClient.CONFIG.getInterval(), attemptsLeft));
             }
         } else if(active && reconnecting) {
-            AutoRelogClient.LOGGER.info(String.format("Failed to connect. Trying again in %d seconds.", AutoRelogClient.CONFIG.getInterval()));
+            if(AutoRelogClient.CONFIG.isLogging()) AutoRelogClient.LOGGER.info(String.format("Failed to connect. Trying again in %d seconds.", AutoRelogClient.CONFIG.getInterval()));
         }
     }
 
@@ -77,7 +77,7 @@ public class Reconnect {
         address = ServerAddress.parse(server.address);
         if(active) {
             reconnecting = false;
-            AutoRelogClient.LOGGER.info("Relogged to server successfully!");
+            if(AutoRelogClient.CONFIG.isLogging()) AutoRelogClient.LOGGER.info("Relogged to server successfully!");
             timer.cancel();
         }
     }
@@ -95,7 +95,7 @@ public class Reconnect {
     }
 
     public void connect() {
-        AutoRelogClient.LOGGER.info("Trying to reconnect...");
+        if(AutoRelogClient.CONFIG.isLogging()) AutoRelogClient.LOGGER.info("Trying to reconnect...");
         ConnectScreen.connect(new MultiplayerScreen(new TitleScreen()), MinecraftClient.getInstance(), address, server, false);
     }
 }
