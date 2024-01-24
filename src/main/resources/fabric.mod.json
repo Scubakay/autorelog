@@ -4,7 +4,12 @@
   "version": "${version}",
   "name": "AutoRelog",
   "description": "",
-  "authors": [],
+  "authors": [
+    "Scubakay"
+  ],
+  "contributors": [
+    "JustAlittleWolf"
+  ],
   "contact": {
     "repo": "https://github.com/scubakay/AutoRelog"
   },
