@@ -15,11 +15,17 @@ public class Config {
 
     private final static boolean DEFAULT_LOGGING = true;
 
+    private final static boolean DEFAULT_AFK_DETECTION = false;
+    private final static int DEFAULT_AFK_DELAY = 60;
+
     private int delay;
     private int interval;
     private int maxAttempts;
 
     private boolean logging;
+
+    private boolean afkDetection;
+    private int afkDelay;
 
     public int getDelay() {
         return delay;
@@ -56,6 +62,24 @@ public class Config {
         logging = enabled;
     }
 
+    public boolean isAfkDetection() {
+        return afkDetection;
+    }
+
+    public void setAfkDetection(boolean enabled) {
+        this.afkDetection = enabled;
+        save();
+    }
+
+    public int getAfkDelay() {
+        return afkDelay;
+    }
+
+    public void setAfkDelay(int delay) {
+        this.afkDelay = delay;
+        save();
+    }
+
     final HoconConfigurationLoader loader = HoconConfigurationLoader.builder()
             .path(Path.of("config/autorelog.conf"))
             .build();
@@ -74,12 +98,16 @@ public class Config {
                 interval = DEFAULT_INTERVAL;
                 maxAttempts = DEFAULT_MAX_ATTEMPTS;
                 logging = DEFAULT_LOGGING;
+                afkDetection = DEFAULT_AFK_DETECTION;
+                afkDelay = DEFAULT_AFK_DELAY;
                 AutoRelogClient.LOGGER.info("No AutoRelog config found, loading default");
             } else {
                 delay = root.node("delay").empty() ? DEFAULT_DELAY : root.node("delay").getInt();
                 interval = root.node("interval").empty() ? DEFAULT_INTERVAL : root.node("interval").getInt();
                 maxAttempts = root.node("maxAttempts").empty() ? DEFAULT_MAX_ATTEMPTS : root.node("maxAttempts").getInt();
                 logging = root.node("logging").empty() ? DEFAULT_LOGGING : root.node("logging").getBoolean();
+                afkDetection = root.node("afkDetection").empty() ? DEFAULT_AFK_DETECTION : root.node("afkDetection").getBoolean();
+                afkDelay = root.node("afkDelay").empty() ? DEFAULT_AFK_DELAY : root.node("afkDelay").getInt();
                 AutoRelogClient.LOGGER.info("Loaded AutoRelog config");
             }
             save();
@@ -97,6 +125,8 @@ public class Config {
             root.node("interval").set(Integer.class, interval).comment("Interval must be higher than 1");
             root.node("maxAttempts").set(Integer.class, maxAttempts).comment("Max attempts must be higher than 0. Set to 0 for infinite attempts");
             root.node("logging").set(Boolean.class, logging);
+            root.node("afkDetection").set(Boolean.class, afkDetection);
+            root.node("afkDelay").set(Integer.class, afkDelay).comment("Delay must be higher than 0. AFK-Detection will be force-disabled otherwise.");
             loader.save(root);
         } catch (final ConfigurateException e) {
             AutoRelogClient.LOGGER.info("Unable to save your AutoRelog configuration! Sorry! " + e.getMessage());

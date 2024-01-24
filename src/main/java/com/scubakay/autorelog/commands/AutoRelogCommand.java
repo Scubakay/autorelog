@@ -6,6 +6,7 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.tree.ArgumentCommandNode;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.scubakay.autorelog.AutoRelogClient;
+import com.scubakay.autorelog.commands.suggestions.AfkDelaySuggestionsProvider;
 import com.scubakay.autorelog.commands.suggestions.DelaySuggestionProvider;
 import com.scubakay.autorelog.commands.suggestions.IntervalSuggestionProvider;
 import com.scubakay.autorelog.commands.suggestions.MaxAttemptsSuggestionProvider;
@@ -61,6 +62,30 @@ public class AutoRelogCommand {
                 .executes(AutoRelogCommand::cancel)
                 .build();
 
+        LiteralCommandNode<FabricClientCommandSource> modeNode = ClientCommandManager
+                .literal("mode")
+                .build();
+
+        LiteralCommandNode<FabricClientCommandSource> manualModeNode = ClientCommandManager
+                .literal("manual")
+                .executes(AutoRelogCommand::manualMode)
+                .build();
+
+        LiteralCommandNode<FabricClientCommandSource> automaticModeNode = ClientCommandManager
+                .literal("automatic")
+                .executes(AutoRelogCommand::afkDetectionMode)
+                .build();
+
+        LiteralCommandNode<FabricClientCommandSource> afkDelayNode = ClientCommandManager
+                .literal("afkDelay")
+                .build();
+
+        ArgumentCommandNode<FabricClientCommandSource, Integer> afkDelayArgumentNode = ClientCommandManager
+                .argument("afkDelay", IntegerArgumentType.integer())
+                .suggests(new AfkDelaySuggestionsProvider())
+                .executes(ctx -> afkDelay(ctx, IntegerArgumentType.getInteger(ctx, "afkDelay")))
+                .build();
+
         LiteralCommandNode<FabricClientCommandSource> loggingNode = ClientCommandManager
                 .literal("logging")
                 .executes(AutoRelogCommand::logging)
@@ -75,7 +100,7 @@ public class AutoRelogCommand {
         configNode.addChild(delayNode);
         delayNode.addChild(delayArgumentNode);
 
-        // Add interval config node
+        // Add delay config node
         configNode.addChild(intervalNode);
         intervalNode.addChild(intervalArgumentNode);
 
@@ -85,6 +110,13 @@ public class AutoRelogCommand {
         // Add max attempts config node
         configNode.addChild(maxAttemptsNode);
         maxAttemptsNode.addChild(maxAttemptsArgumentNode);
+
+        configNode.addChild(modeNode);
+        modeNode.addChild(manualModeNode);
+        modeNode.addChild(automaticModeNode);
+
+        configNode.addChild(afkDelayNode);
+        afkDelayNode.addChild(afkDelayArgumentNode);
 
         autoRelogNode.addChild(cancelNode);
     }
@@ -142,6 +174,29 @@ public class AutoRelogCommand {
     private static int logging(CommandContext<FabricClientCommandSource> context) {
         AutoRelogClient.CONFIG.setLogging(!AutoRelogClient.CONFIG.isLogging());
         context.getSource().getPlayer().sendMessage(Text.translatable("commands.logging.toggled", AutoRelogClient.CONFIG.isLogging() ? "Enabled" : "Disabled"), false);
+        return 1;
+    }
+
+    private static int afkDelay(CommandContext<FabricClientCommandSource> context, int afkDelay) {
+        if (afkDelay < 0) {
+            context.getSource().getPlayer().sendMessage(Text.translatable("commands.config_error_delay"), false);
+            return -1;
+        }
+        AutoRelogClient.CONFIG.setAfkDelay(afkDelay);
+        context.getSource().getPlayer().sendMessage(Text.translatable("commands.afkDetection.delayChanged", afkDelay), false);
+        return 1;
+    }
+
+    private static int manualMode(CommandContext<FabricClientCommandSource> context) {
+        if(AutoRelogClient.CONFIG.isAfkDetection()) Reconnect.getInstance().deactivate();
+        AutoRelogClient.CONFIG.setAfkDetection(false);
+        context.getSource().getPlayer().sendMessage(Text.translatable("commands.mode.manual"), false);
+        return 1;
+    }
+
+    private static int afkDetectionMode(CommandContext<FabricClientCommandSource> context) {
+        AutoRelogClient.CONFIG.setAfkDetection(true);
+        context.getSource().getPlayer().sendMessage(Text.translatable("commands.mode.afkDetection"), false);
         return 1;
     }
 }
