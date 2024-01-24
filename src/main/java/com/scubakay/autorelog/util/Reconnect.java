@@ -37,6 +37,10 @@ public class Reconnect {
         timer = new Timer();
     }
 
+    public boolean isActive() {
+        return active;
+    }
+
     public void activate() {
         if (!active) {
             AutoRelogClient.LOGGER.info("AutoRelog activated");

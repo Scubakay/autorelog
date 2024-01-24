@@ -6,9 +6,10 @@
   "mixins": [
   ],
   "client": [
+    "DisconnectedScreenMixin",
     "GameMenuScreenMixin",
-    "MultiplayerScreenMixin",
-    "DisconnectedScreenMixin"
+    "ClientPlayerEntityMixin",
+    "MultiplayerScreenMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -14,6 +14,8 @@ Make sure to have proper overflow protection in your farms!
 - Use `/autorelog config delay <delay>` to set the amount of time in seconds AutoRelog should wait before trying to reconnect.
 - Use `/autorelog config interval <interval>` to set the interval between reconnection attempts.
 - Use `/autorelog config maxAttempts <maxAttempts>` to set the maximal amount of reconnection attempts. Zero or negative numbers will result in unlimited attempts.
+- Use `/autorelog config mode <automatic/manual>` to toggle switch between AFK-Detection and manual mode.
+- Use `/autorelog config afkDelay <delay>` to set the amount of time in seconds the player has to be afk for automatic reconnection to work.
 - Disconnect by leaving the server manually or use `/autorelog cancel` to deactivate.
 
 Delay and interval can also be changed in the config file (autorelog.conf).
