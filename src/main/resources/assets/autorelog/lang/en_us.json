@@ -8,5 +8,5 @@
   "commands.config_error_max_attempts": "Max attempts must be a positive number. Enter 0 for infinite attempts.",
   "commands.config_error_delay": "Delay must be above zero",
   "commands.config_error_interval": "Interval must be above zero",
-  "commands.logging.toggled": "%d logging"
+  "commands.logging.toggled": "%d AutoRelog logging"
 }
