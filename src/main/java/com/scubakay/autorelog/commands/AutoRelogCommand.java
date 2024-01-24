@@ -75,9 +75,12 @@ public class AutoRelogCommand {
         configNode.addChild(delayNode);
         delayNode.addChild(delayArgumentNode);
 
-        // Add delay config node
+        // Add interval config node
         configNode.addChild(intervalNode);
         intervalNode.addChild(intervalArgumentNode);
+
+        // Add logging config node
+        configNode.addChild(loggingNode);
 
         // Add max attempts config node
         configNode.addChild(maxAttemptsNode);
