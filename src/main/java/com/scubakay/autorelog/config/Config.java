@@ -13,9 +13,13 @@ public class Config {
     private final static int DEFAULT_INTERVAL = 30;
     private final static int DEFAULT_MAX_ATTEMPTS = 5;
 
+    private final static boolean DEFAULT_LOGGING = true;
+
     private int delay;
     private int interval;
     private int maxAttempts;
+
+    private boolean logging;
 
     public int getDelay() {
         return delay;
@@ -44,6 +48,14 @@ public class Config {
         save();
     }
 
+    public boolean isLogging() {
+        return logging;
+    }
+
+    public void setLogging(boolean enabled) {
+        logging = enabled;
+    }
+
     final HoconConfigurationLoader loader = HoconConfigurationLoader.builder()
             .path(Path.of("config/autorelog.conf"))
             .build();
@@ -61,11 +73,13 @@ public class Config {
                 delay = DEFAULT_DELAY;
                 interval = DEFAULT_INTERVAL;
                 maxAttempts = DEFAULT_MAX_ATTEMPTS;
+                logging = DEFAULT_LOGGING;
                 AutoRelogClient.LOGGER.info("No AutoRelog config found, loading default");
             } else {
                 delay = root.node("delay").empty() ? DEFAULT_DELAY : root.node("delay").getInt();
                 interval = root.node("interval").empty() ? DEFAULT_INTERVAL : root.node("interval").getInt();
                 maxAttempts = root.node("maxAttempts").empty() ? DEFAULT_MAX_ATTEMPTS : root.node("maxAttempts").getInt();
+                logging = root.node("logging").empty() ? DEFAULT_LOGGING : root.node("logging").getBoolean();
                 AutoRelogClient.LOGGER.info("Loaded AutoRelog config");
             }
             save();
@@ -82,6 +96,7 @@ public class Config {
             root.node("delay").set(Integer.class, delay).comment("Delay must be higher than 1");
             root.node("interval").set(Integer.class, interval).comment("Interval must be higher than 1");
             root.node("maxAttempts").set(Integer.class, maxAttempts).comment("Max attempts must be higher than 0. Set to 0 for infinite attempts");
+            root.node("logging").set(Boolean.class, logging);
             loader.save(root);
         } catch (final ConfigurateException e) {
             AutoRelogClient.LOGGER.info("Unable to save your AutoRelog configuration! Sorry! " + e.getMessage());
