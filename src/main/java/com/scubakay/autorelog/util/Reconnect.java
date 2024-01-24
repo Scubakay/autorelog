@@ -74,7 +74,10 @@ public class Reconnect {
 
     public void join(ClientPlayNetworkHandler handler) {
         server = handler.getServerInfo();
-        address = ServerAddress.parse(server.address);
+        if (server != null) {
+            // If server is null this is single player, so don't parse it.
+            address = ServerAddress.parse(server.address);
+        }
         if(active) {
             reconnecting = false;
             if(AutoRelogClient.CONFIG.isLogging()) AutoRelogClient.LOGGER.info("Relogged to server successfully!");
@@ -83,6 +86,9 @@ public class Reconnect {
     }
 
     private void scheduleReconnect() {
+        // Don't try to reconnect when we don't have an address
+        if(address == null) return;
+
         if (timer != null) {
             timer = new Timer();
         }
