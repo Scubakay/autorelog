@@ -37,7 +37,7 @@ jobs:
         run: ./gradlew clean build
 
       - name: Publish Github/Modrinth
-        uses: Kir-Antipov/mc-publish@v3.2
+        uses: Kir-Antipov/mc-publish@v3.3
         with:
           changelog-file: CHANGELOG.md
           java: "${{env.JAVA_VERSION}}"
