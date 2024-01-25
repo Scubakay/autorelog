@@ -20,3 +20,7 @@ Make sure to have proper overflow protection in your farms!
 - Disconnect by leaving the server manually or use `/autorelog cancel` to deactivate.
 
 Delay and interval can also be changed in the config file (autorelog.conf).
+
+# Contributing
+
+If you want to help out by creating a pull request, please add version updates to a separate pull request.
