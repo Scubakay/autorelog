@@ -3,15 +3,18 @@
   "id": "autorelog",
   "version": "${version}",
   "name": "AutoRelog",
-  "description": "",
+  "description": "Reconnect automatically to a restarting Minecraft server when AFK!",
   "authors": [
     "Scubakay"
   ],
   "contributors": [
-    "JustAlittleWolf"
+    "JustAlittleWolf",
+    "NotRyken"
   ],
   "contact": {
-    "repo": "https://github.com/scubakay/AutoRelog"
+    "homepage": "https://modrinth.com/mod/autorelog",
+    "sources": "https://github.com/Scubakay/autorelog",
+    "issues": "https://github.com/Scubakay/autorelog/issues"
   },
   "license": "MIT",
   "icon": "assets/autorelog/icon.png",

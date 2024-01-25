@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '1.4-SNAPSHOT'
+    id 'fabric-loom' version '1.5-SNAPSHOT'
     id 'maven-publish'
 }
 
@@ -31,7 +31,11 @@ dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-    implementation("org.spongepowered:configurate-hocon:4.1.2")
+
+    modApi(include("org.spongepowered:configurate-core:${project.hocon_version}"))
+    modApi(include("org.spongepowered:configurate-hocon:${project.hocon_version}"))
+    include("com.typesafe:config:${project.typesafe_version}")
+    include("io.leangen.geantyref:geantyref:${project.geantyref_version}")
 
     modImplementation "maven.modrinth:auth-me:${project.authme_version}-fabric"
     modImplementation "maven.modrinth:cloth-config:${project.clothconfig_version}-fabric"
