@@ -36,7 +36,7 @@ jobs:
       - name: Build
         run: ./gradlew clean build
 
-      - name: Publish Github/Modrinth
+      - name: Publish Modrinth
         uses: Kir-Antipov/mc-publish@v3.3
         with:
           changelog-file: CHANGELOG.md
