@@ -37,10 +37,10 @@ dependencies {
     include("com.typesafe:config:${project.typesafe_version}")
     include("io.leangen.geantyref:geantyref:${project.geantyref_version}")
 
-    modImplementation "maven.modrinth:auth-me:${project.authme_version}-fabric"
+    // modImplementation "maven.modrinth:auth-me:${project.authme_version}-fabric"
     modImplementation "maven.modrinth:cloth-config:${project.clothconfig_version}-fabric"
 
-        // Fabric API. This is technically optional, but you probably want it anyway.
+    // Fabric API. This is technically optional, but you probably want it anyway.
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 }
 
@@ -57,7 +57,7 @@ processResources {
     }
 }
 
-def targetJavaVersion = 17
+def targetJavaVersion = 21
 tasks.withType(JavaCompile).configureEach {
     // ensure that the encoding is set to UTF-8, no matter what the system default is
     // this fixes some edge cases with special characters not displaying correctly
