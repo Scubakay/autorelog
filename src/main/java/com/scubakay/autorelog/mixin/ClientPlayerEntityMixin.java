@@ -1,6 +1,7 @@
 package com.scubakay.autorelog.mixin;
 
 import com.scubakay.autorelog.config.Config;
+import com.scubakay.autorelog.util.AfkMode;
 import com.scubakay.autorelog.util.Reconnect;
 import net.minecraft.client.input.Input;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -22,12 +23,12 @@ public abstract class ClientPlayerEntityMixin {
 
     //initializing with Reconnect::isActive required for afk detection to work properly after a relog
     @Unique
-    private boolean isAfk = Reconnect.getInstance().isActive() && Config.afkDetection;
+    private boolean isAfk = Reconnect.getInstance().isActive() && Config.mode == AfkMode.AUTOMATIC;
 
     @Inject(method = "tick", at = @At("HEAD"))
     private void detectInput(CallbackInfo ci) {
         if(lastInput == 0) lastInput = System.currentTimeMillis();
-        if (!Config.afkDetection) return;
+        if (Config.mode == AfkMode.MANUAL) return;
         checkIsAfk(input.getMovementInput());
     }
 
