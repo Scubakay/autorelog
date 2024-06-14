@@ -38,10 +38,11 @@ dependencies {
     include("io.leangen.geantyref:geantyref:${project.geantyref_version}")
 
     // modImplementation "maven.modrinth:auth-me:${project.authme_version}-fabric"
-    modImplementation "maven.modrinth:cloth-config:${project.clothconfig_version}-fabric"
+    modImplementation "maven.modrinth:modmenu:${project.modmenu_version}"
 
     // Fabric API. This is technically optional, but you probably want it anyway.
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+    modImplementation "maven.modrinth:midnightlib:${project.midnightlib_version}"
 }
 
 processResources {
