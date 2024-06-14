@@ -1,1 +1,4 @@
-- Add option to toggle logging: `/autorelog config logging`
+- Now has Mod Menu support!
+- Config commands are removed in favor of Mod Menu
+- Config is now stored in a json file
+- Changed the default AFK delay to 5 minutes

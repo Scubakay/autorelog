@@ -1,6 +1,7 @@
 package com.scubakay.autorelog.util;
 
 import com.scubakay.autorelog.AutoRelogClient;
+import com.scubakay.autorelog.config.Config;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.multiplayer.ConnectScreen;
@@ -14,8 +15,8 @@ import java.util.TimerTask;
 public class Reconnect {
     private ServerInfo server;
     private ServerAddress address;
-    private final static long DELAY = 1000L * AutoRelogClient.CONFIG.getDelay();
-    private final static long INTERVAL = 1000L * AutoRelogClient.CONFIG.getInterval();
+    private final static long DELAY = 1000L * Config.delay;
+    private final static long INTERVAL = 1000L * Config.interval;
     private Timer timer;
     private boolean active = false;
     private boolean reconnecting = false;
@@ -43,14 +44,14 @@ public class Reconnect {
 
     public void activate() {
         if (!active) {
-            if(AutoRelogClient.CONFIG.isLogging()) AutoRelogClient.LOGGER.info("AutoRelog activated");
+            if(Config.logging == Logging.ENABLED) AutoRelogClient.LOGGER.info("AutoRelog activated");
             active = true;
         }
     }
 
     public void deactivate() {
         if (active) {
-            if(AutoRelogClient.CONFIG.isLogging()) AutoRelogClient.LOGGER.info("AutoRelog deactivated");
+            if(Config.logging == Logging.ENABLED) AutoRelogClient.LOGGER.info("AutoRelog deactivated");
             timer.cancel();
             active = false;
             reconnecting = false;
@@ -59,20 +60,20 @@ public class Reconnect {
 
     public void startReconnecting() {
         if (active && !reconnecting) {
-            attemptsLeft = AutoRelogClient.CONFIG.getMaxAttempts();
-            if(AutoRelogClient.CONFIG.isLogging()) AutoRelogClient.LOGGER.info(String.format("Auto relogging every %d seconds in %d seconds", AutoRelogClient.CONFIG.getInterval(), AutoRelogClient.CONFIG.getDelay()));
+            attemptsLeft = Config.maxAttempts;
+            if(Config.logging == Logging.ENABLED) AutoRelogClient.LOGGER.info(String.format("Auto relogging every %d seconds in %d seconds", Config.interval, Config.delay));
             scheduleReconnect();
             reconnecting = true;
-        } else if(active && reconnecting && AutoRelogClient.CONFIG.getMaxAttempts() > 0) {
+        } else if(active && reconnecting && Config.maxAttempts > 0) {
             attemptsLeft--;
             if (attemptsLeft == 0) {
-                if(AutoRelogClient.CONFIG.isLogging()) AutoRelogClient.LOGGER.info("Failed all reconnection attempts, stopping...");
+                if(Config.logging == Logging.ENABLED) AutoRelogClient.LOGGER.info("Failed all reconnection attempts, stopping...");
                 deactivate();
             } else {
-                if(AutoRelogClient.CONFIG.isLogging()) AutoRelogClient.LOGGER.info(String.format("Failed to connect. Trying again in %d seconds with %d attempts left.", AutoRelogClient.CONFIG.getInterval(), attemptsLeft));
+                if(Config.logging == Logging.ENABLED) AutoRelogClient.LOGGER.info(String.format("Failed to connect. Trying again in %d seconds with %d attempts left.", Config.interval, attemptsLeft));
             }
         } else if(active && reconnecting) {
-            if(AutoRelogClient.CONFIG.isLogging()) AutoRelogClient.LOGGER.info(String.format("Failed to connect. Trying again in %d seconds.", AutoRelogClient.CONFIG.getInterval()));
+            if(Config.logging == Logging.ENABLED) AutoRelogClient.LOGGER.info(String.format("Failed to connect. Trying again in %d seconds.", Config.interval));
         }
     }
 
@@ -84,7 +85,7 @@ public class Reconnect {
         }
         if(active) {
             reconnecting = false;
-            if(AutoRelogClient.CONFIG.isLogging()) AutoRelogClient.LOGGER.info("Relogged to server successfully!");
+            if(Config.logging == Logging.ENABLED) AutoRelogClient.LOGGER.info("Relogged to server successfully!");
             timer.cancel();
         }
     }
@@ -105,7 +106,7 @@ public class Reconnect {
     }
 
     public void connect() {
-        if(AutoRelogClient.CONFIG.isLogging()) AutoRelogClient.LOGGER.info("Trying to reconnect...");
+        if(Config.logging == Logging.ENABLED) AutoRelogClient.LOGGER.info("Trying to reconnect...");
         ConnectScreen.connect(new MultiplayerScreen(new TitleScreen()), MinecraftClient.getInstance(), address, server, false, null);
     }
 }
