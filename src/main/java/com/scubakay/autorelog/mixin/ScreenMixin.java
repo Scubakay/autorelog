@@ -22,11 +22,13 @@ public class ScreenMixin {
         if (((Screen)(Object)this) instanceof DisconnectedScreen) {
             if(Reconnect.getInstance().isActive()) {
                 int countdown = Reconnect.getInstance().getCountdown();
-                if (countdown >= 0) {
-                    context.drawTextWithShadow(this.textRenderer, Text.translatable("autorelog.disconnectedscreen.reconnecting", countdown), 5, 5, 0xFF0000);
+                if (!Reconnect.getInstance().isReconnecting()) {
+                    context.drawTextWithShadow(this.textRenderer, Text.translatable("autorelog.disconnectedscreen.failed"), 5, 5, 0xFF0000);
+                } else if (countdown > 0) {
+                    context.drawTextWithShadow(this.textRenderer, Text.translatable("autorelog.disconnectedscreen.countdown", countdown), 5, 5, 0xFF0000);
+                } else if (countdown <= 0) {
+                    context.drawTextWithShadow(this.textRenderer, Text.translatable("autorelog.disconnectedscreen.reconnecting"), 5, 5, 0xFF0000);
                 }
-            } else {
-                context.drawTextWithShadow(this.textRenderer, Text.translatable("autorelog.disconnectedscreen.failed"), 5, 5, 0xFF0000);
             }
         }
     }
