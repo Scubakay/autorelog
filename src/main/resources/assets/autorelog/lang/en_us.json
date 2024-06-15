@@ -19,5 +19,6 @@
   "autorelog.midnightconfig.loggingComment": "Logging",
   "autorelog.midnightconfig.logging": "Logging",
   "autorelog.midnightconfig.enum.Logging.ENABLED": "Enabled",
-  "autorelog.midnightconfig.enum.Logging.DISABLED": "Disabled"
+  "autorelog.midnightconfig.enum.Logging.DISABLED": "Disabled",
+  "autorelog.disconnectedscreen.reconnecting": "Reconnecting in %d seconds"
 }
