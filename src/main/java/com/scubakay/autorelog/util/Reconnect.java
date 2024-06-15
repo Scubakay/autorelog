@@ -45,6 +45,10 @@ public class Reconnect {
         return countdown;
     }
 
+    public boolean isReconnecting() {
+        return reconnecting;
+    }
+
     public void activate() {
         if (!active) {
             if(Config.logging == Logging.ENABLED) AutoRelogClient.LOGGER.info("AutoRelog activated");
@@ -73,7 +77,8 @@ public class Reconnect {
             if (attemptsLeft == 0) {
                 if (Config.logging == Logging.ENABLED)
                     AutoRelogClient.LOGGER.info("Failed all reconnection attempts, stopping...");
-                deactivate();
+                reconnecting = false;
+                countdown = -1;
             } else {
                 if (Config.logging == Logging.ENABLED)
                     AutoRelogClient.LOGGER.info(String.format("Failed to connect. Trying again in %d seconds with %d attempts left.", Config.interval, attemptsLeft));
@@ -110,10 +115,10 @@ public class Reconnect {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                countdown--;
                 if (countdown <= 0) {
                     MinecraftClient.getInstance().execute(Reconnect.getInstance()::connect);
                 }
+                countdown--;
             }
         }, 0, 1000);
     }
