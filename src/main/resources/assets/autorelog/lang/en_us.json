@@ -18,5 +18,6 @@
   "autorelog.midnightconfig.logging": "Logging",
   "autorelog.midnightconfig.enum.Logging.ENABLED": "Enabled",
   "autorelog.midnightconfig.enum.Logging.DISABLED": "Disabled",
-  "autorelog.disconnectedscreen.reconnecting": "Reconnecting in %d seconds"
+  "autorelog.disconnectedscreen.reconnecting": "Reconnecting in %d seconds",
+  "autorelog.disconnectedscreen.failed": "All reconnection attempts failed"
 }

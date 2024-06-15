@@ -21,10 +21,12 @@ public class ScreenMixin {
     public void injectCountdown(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
         if (((Screen)(Object)this) instanceof DisconnectedScreen) {
             if(Reconnect.getInstance().isActive()) {
-                int countdown = Reconnect.getInstance().countdown;
+                int countdown = Reconnect.getInstance().getCountdown();
                 if (countdown >= 0) {
                     context.drawTextWithShadow(this.textRenderer, Text.translatable("autorelog.disconnectedscreen.reconnecting", countdown), 5, 5, 0xFF0000);
                 }
+            } else {
+                context.drawTextWithShadow(this.textRenderer, Text.translatable("autorelog.disconnectedscreen.failed"), 5, 5, 0xFF0000);
             }
         }
     }

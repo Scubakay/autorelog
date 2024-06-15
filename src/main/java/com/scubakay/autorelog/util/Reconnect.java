@@ -19,7 +19,7 @@ public class Reconnect {
     private boolean active = false;
     private boolean reconnecting = false;
     private int attemptsLeft = 0;
-    public int countdown = -1;
+    private int countdown = -1;
 
     public static void registerJoinEvent(ClientPlayNetworkHandler handler, PacketSender ignoredPacketSender, MinecraftClient ignoredMinecraftClient) {
         Reconnect.getInstance().join(handler);
@@ -39,6 +39,10 @@ public class Reconnect {
 
     public boolean isActive() {
         return active;
+    }
+
+    public int getCountdown() {
+        return countdown;
     }
 
     public void activate() {
