@@ -61,7 +61,7 @@ public class Reconnect {
     public void startReconnecting() {
         if (active && !reconnecting) {
             attemptsLeft = Config.maxAttempts;
-            if(Config.logging == Logging.ENABLED) AutoRelogClient.LOGGER.info(String.format("Auto relogging every %d seconds in %d seconds", Config.interval, Config.delay));
+            if(Config.logging == Logging.ENABLED) AutoRelogClient.LOGGER.info(String.format("Auto relogging every %d seconds", Config.interval));
             scheduleReconnect();
             reconnecting = true;
         } else if(active && Config.maxAttempts > 0) {

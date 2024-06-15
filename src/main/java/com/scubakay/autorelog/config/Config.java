@@ -5,7 +5,6 @@ import com.scubakay.autorelog.util.Logging;
 import eu.midnightdust.lib.config.MidnightConfig;
 
 public class Config extends MidnightConfig {
-    @Entry() public static int delay = 60;
     @Entry() public static int interval = 30;
     @Entry() public static int maxAttempts = 5;
 
