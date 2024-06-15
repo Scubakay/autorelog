@@ -15,12 +15,11 @@ import java.util.TimerTask;
 public class Reconnect {
     private ServerInfo server;
     private ServerAddress address;
-    private final static long DELAY = 1000L * Config.delay;
-    private final static long INTERVAL = 1000L * Config.interval;
     private Timer timer;
     private boolean active = false;
     private boolean reconnecting = false;
     private int attemptsLeft = 0;
+    private int countdown = -1;
 
     public static void registerJoinEvent(ClientPlayNetworkHandler handler, PacketSender ignoredPacketSender, MinecraftClient ignoredMinecraftClient) {
         Reconnect.getInstance().join(handler);
@@ -42,6 +41,10 @@ public class Reconnect {
         return active;
     }
 
+    public int getCountdown() {
+        return countdown;
+    }
+
     public void activate() {
         if (!active) {
             if(Config.logging == Logging.ENABLED) AutoRelogClient.LOGGER.info("AutoRelog activated");
@@ -55,25 +58,31 @@ public class Reconnect {
             timer.cancel();
             active = false;
             reconnecting = false;
+            countdown = -1;
         }
     }
 
     public void startReconnecting() {
         if (active && !reconnecting) {
             attemptsLeft = Config.maxAttempts;
-            if(Config.logging == Logging.ENABLED) AutoRelogClient.LOGGER.info(String.format("Auto relogging every %d seconds in %d seconds", Config.interval, Config.delay));
+            if(Config.logging == Logging.ENABLED) AutoRelogClient.LOGGER.info(String.format("Auto relogging every %d seconds", Config.interval));
             scheduleReconnect();
             reconnecting = true;
-        } else if(active && reconnecting && Config.maxAttempts > 0) {
+        } else if(active && Config.maxAttempts > 0) {
             attemptsLeft--;
             if (attemptsLeft == 0) {
-                if(Config.logging == Logging.ENABLED) AutoRelogClient.LOGGER.info("Failed all reconnection attempts, stopping...");
+                if (Config.logging == Logging.ENABLED)
+                    AutoRelogClient.LOGGER.info("Failed all reconnection attempts, stopping...");
                 deactivate();
             } else {
-                if(Config.logging == Logging.ENABLED) AutoRelogClient.LOGGER.info(String.format("Failed to connect. Trying again in %d seconds with %d attempts left.", Config.interval, attemptsLeft));
+                if (Config.logging == Logging.ENABLED)
+                    AutoRelogClient.LOGGER.info(String.format("Failed to connect. Trying again in %d seconds with %d attempts left.", Config.interval, attemptsLeft));
+                this.scheduleReconnect();
             }
-        } else if(active && reconnecting) {
-            if(Config.logging == Logging.ENABLED) AutoRelogClient.LOGGER.info(String.format("Failed to connect. Trying again in %d seconds.", Config.interval));
+        } else if(active) {
+            if (Config.logging == Logging.ENABLED)
+                AutoRelogClient.LOGGER.info(String.format("Failed to connect. Trying again in %d seconds.", Config.interval));
+            this.scheduleReconnect();
         }
     }
 
@@ -97,16 +106,22 @@ public class Reconnect {
         if (timer != null) {
             timer = new Timer();
         }
+        countdown = Config.interval;
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                MinecraftClient.getInstance().execute(Reconnect.getInstance()::connect);
+                countdown--;
+                if (countdown <= 0) {
+                    MinecraftClient.getInstance().execute(Reconnect.getInstance()::connect);
+                }
             }
-        }, DELAY, INTERVAL);
+        }, 0, 1000);
     }
 
     public void connect() {
         if(Config.logging == Logging.ENABLED) AutoRelogClient.LOGGER.info("Trying to reconnect...");
+
         ConnectScreen.connect(new MultiplayerScreen(new TitleScreen()), MinecraftClient.getInstance(), address, server, false, null);
+        timer.cancel();
     }
 }

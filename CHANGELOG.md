@@ -1,4 +1,2 @@
-- Now has Mod Menu support!
-- Config commands are removed in favor of Mod Menu
-- Config is now stored in a json file
-- Changed the default AFK delay to 5 minutes
+- Now displays a countdown on the disconnect screen
+- Removed delay from config. AutoRelog will now use the interval without a delay.

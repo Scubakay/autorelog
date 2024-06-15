@@ -9,6 +9,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(DisconnectedScreen.class)
 public class DisconnectedScreenMixin {
+
     @Inject(method = "init", at = @At("HEAD"))
     private void injectInit(CallbackInfo ci) {
         Reconnect.getInstance().startReconnecting();
