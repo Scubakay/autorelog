@@ -5,7 +5,7 @@
   "autorelog.midnightconfig.title": "AutoRelog",
   "autorelog.midnightconfig.interval": "Interval",
   "autorelog.midnightconfig.interval.tooltip": "The interval between reconnection attempts in seconds.",
-  "autorelog.midnightconfig.maxAttempts": "Max Attemps",
+  "autorelog.midnightconfig.maxAttempts": "Max Attempts",
   "autorelog.midnightconfig.maxAttempts.tooltip": "The maximum amount of attempts AutoRelog should make to reconnect. Set to 0 for unlimited attempts. (be sure the server admin is okay with this though!)",
   "autorelog.midnightconfig.afkDetectionComment": "Automatic AFK Detection",
   "autorelog.midnightconfig.afkDelay": "AFK Delay",
