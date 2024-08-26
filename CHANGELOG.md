@@ -1,2 +1,1 @@
-- Now displays a countdown on the disconnect screen
-- Removed delay from config. AutoRelog will now use the interval without a delay.
+- Update to 1.21.1
