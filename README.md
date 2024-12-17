@@ -22,3 +22,7 @@ in the `autorelog.json` file to `"mode": "AUTOMATIC"`.
 # Contributing
 
 If you want to help out by creating a pull request, please add version updates to a separate pull request.
+
+## Thanks
+
+- [yichifauzi](https://github.com/yichifauzi) and [notlin4](https://github.com/notlin4) for Chinese translations
