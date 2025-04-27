@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '1.9-SNAPSHOT'
+    id 'fabric-loom' version '1.10-SNAPSHOT'
     id 'maven-publish'
 }
 
@@ -33,6 +33,7 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
     modImplementation "maven.modrinth:auth-me:${project.authme_version}-fabric"
+    modImplementation "maven.modrinth:resourceful-config:${project.resourcefulconfig_version}-fabric"
     modImplementation "maven.modrinth:cloth-config:${project.clothconfig_version}-fabric"
     modImplementation "maven.modrinth:modmenu:${project.modmenu_version}"
     modImplementation "maven.modrinth:midnightlib:${project.midnightlib_version}"
