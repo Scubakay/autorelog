@@ -126,7 +126,7 @@ public class Reconnect {
     public void connect() {
         if(Config.logging == Logging.ENABLED) AutoRelogClient.LOGGER.info("Trying to reconnect...");
 
-        ConnectScreen.connect(new MultiplayerScreen(new TitleScreen()), MinecraftClient.getInstance(), address, server, false, null);
+        ConnectScreen.connect(new MultiplayerScreen(new TitleScreen()), MinecraftClient.getInstance(), address, server, false/*? >=1.20.5 {*/, null/*?}*/);
         timer.cancel();
     }
 }

@@ -24,6 +24,7 @@ val mod = ModData()
 val deps = ModDependencies()
 val dev = DevDependencies()
 val mcVersion = stonecutter.current.version
+val authmeVersion = dev["authme"]
 val mcDep = property("mod.mc_dep").toString()
 
 version = "${mod.version}+$mcVersion"
@@ -70,7 +71,12 @@ dependencies {
 
     // Dev mods
     modImplementation("maven.modrinth:modmenu:${dev["modmenu"]}-fabric")
-    modImplementation("maven.modrinth:auto-reauth:${dev["autoreauth"]}-fabric,${mcVersion}")
+    modImplementation("maven.modrinth:auth-me:${dev["authme"]}-fabric")
+    if (stonecutter.eval(mcVersion, ">=1.21")) {
+        modImplementation("maven.modrinth:resourceful-config:${dev["authmeconfig"]}-fabric")
+    } else {
+        modImplementation("maven.modrinth:cloth-config:${dev["authmeconfig"]}-fabric")
+    }
 }
 
 loom {
