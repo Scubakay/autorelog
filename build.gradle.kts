@@ -3,6 +3,20 @@ plugins {
     id("fabric-loom")
     //id("dev.kikugie.j52j")
     //id("me.modmuss50.mod-publish-plugin")
+    id("com.star-zero.gradle.githook") version "1.2.1"
+}
+
+val isWindows = System.getProperty("os.name").lowercase().contains("windows")
+
+githook {
+    hooks {
+//        if (isWindows) {
+//            gradleCommand = rootProject.rootDir.resolve("gradlew")
+//        }
+        register("pre-commit") {
+            shell = "Reset active project"
+        }
+    }
 }
 
 class ModData {
