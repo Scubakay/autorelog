@@ -70,9 +70,7 @@ dependencies {
 
     // Dev mods
     modImplementation("maven.modrinth:modmenu:${dev["modmenu"]}-fabric")
-    modImplementation("maven.modrinth:auto-reauth:${dev["autoreauth"]}-fabric,${mcVersion}") // Necessary to connect to a server
-//    modImplementation("maven.modrinth:auth-me:${dev["authme"]}-fabric") // Necessary to connect to a server
-//    modImplementation("maven.modrinth:resourceful-config:${dev["resourcefulconfig"]}-fabric") // Dependency of authme
+    modImplementation("maven.modrinth:auto-reauth:${dev["autoreauth"]}-fabric,${mcVersion}")
 }
 
 loom {
