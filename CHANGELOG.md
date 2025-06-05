@@ -1,1 +1,1 @@
-- Latvian Translation by EEHoveckis
+- Add multiversion support through stonecutter

@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "id": "autorelog",
+  "id": "${id}",
   "version": "${version}",
-  "name": "AutoRelog",
+  "name": "${name}",
   "description": "Reconnect automatically to a restarting Minecraft server when AFK!",
   "authors": [
     "Scubakay"
@@ -29,8 +29,8 @@
     "autorelog.mixins.json"
   ],
   "depends": {
-    "fabricloader": ">=${loader_version}",
-    "fabric": "*",
-    "minecraft": "${minecraft_version}"
+    "fabricloader": ">=0.15",
+    "minecraft": "${mcdep}",
+    "fabric-api": "*"
   }
 }
