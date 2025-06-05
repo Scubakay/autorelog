@@ -4,7 +4,7 @@ import com.scubakay.autorelog.AutoRelogClient;
 import com.scubakay.autorelog.config.Config;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.multiplayer.ConnectScreen;
+import net.minecraft.client.gui.screen/*? >=1.20.5 {*/.multiplayer/*?}*/.ConnectScreen;
 import net.minecraft.client.gui.screen.TitleScreen;
 import net.minecraft.client.gui.screen.multiplayer.MultiplayerScreen;
 import net.minecraft.client.network.*;
@@ -125,7 +125,6 @@ public class Reconnect {
 
     public void connect() {
         if(Config.logging == Logging.ENABLED) AutoRelogClient.LOGGER.info("Trying to reconnect...");
-
         ConnectScreen.connect(new MultiplayerScreen(new TitleScreen()), MinecraftClient.getInstance(), address, server, false/*? >=1.20.5 {*/, null/*?}*/);
         timer.cancel();
     }
