@@ -40,6 +40,10 @@ public class Reconnect {
         timer = new Timer();
     }
 
+    public boolean hasAddress() {
+        return address != null;
+    }
+
     public boolean isActive() {
         return active;
     }
@@ -129,6 +133,9 @@ public class Reconnect {
 
     public void connect() {
         if (Config.logging == Logging.ENABLED) AutoRelogClient.LOGGER.info("Trying to reconnect...");
+        if (attemptsLeft <= 0) {
+            deactivate();
+        }
         ConnectScreen.connect(
             new MultiplayerScreen(new TitleScreen()),
             MinecraftClient.getInstance(),
