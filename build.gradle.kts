@@ -130,7 +130,7 @@ githook {
 tasks.processResources {
     // Fabric's mod id changed in 1.19.3, but we can still use the old one: https://fabricmc.net/2022/11/24/1193.html
     // By using "fabric" for all <1.20 versions we can avoid splitting up 1.19
-    val fabricKey = if (stonecutter.eval(mcVersion, ">=1.20")) "fabric-api" else "fabric"
+    val fabricKey = if (stonecutter.eval(mcVersion, ">=1.19.3")) "fabric-api" else "fabric"
 
     inputs.property("id", mod.id)
     inputs.property("name", mod.name)
