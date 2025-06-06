@@ -2,7 +2,7 @@ plugins {
     `maven-publish`
     id("fabric-loom")
     //id("dev.kikugie.j52j")
-    //id("me.modmuss50.mod-publish-plugin")
+    id("me.modmuss50.mod-publish-plugin")
     id("com.star-zero.gradle.githook") version "1.2.1"
 }
 
@@ -156,8 +156,13 @@ tasks.register<Copy>("buildAndCollect") {
     dependsOn("build")
 }
 
-/*
 publishMods {
+    fun versionList(prop: String) = findProperty(prop)?.toString()
+        ?.split("\\s+".toRegex())
+        ?.map { it.trim() }
+        ?: emptyList()
+    val versions = versionList("mod.mc_targets")
+
     file = tasks.remapJar.get().archiveFile
     additionalFiles.from(tasks.remapSourcesJar.get().archiveFile)
     displayName = "${mod.name} ${mod.version} for $mcVersion"
@@ -167,28 +172,28 @@ publishMods {
     modLoaders.add("fabric")
 
     dryRun = providers.environmentVariable("MODRINTH_TOKEN")
-        .getOrNull() == null || providers.environmentVariable("CURSEFORGE_TOKEN").getOrNull() == null
+        .getOrNull() == null
+    // || providers.environmentVariable("CURSEFORGE_TOKEN").getOrNull() == null
 
     modrinth {
         projectId = property("publish.modrinth").toString()
         accessToken = providers.environmentVariable("MODRINTH_TOKEN")
-        minecraftVersions.add(mcVersion)
+        minecraftVersions.addAll(versions)
         requires {
             slug = "fabric-api"
         }
     }
 
-    curseforge {
-        projectId = property("publish.curseforge").toString()
-        accessToken = providers.environmentVariable("CURSEFORGE_TOKEN")
-        minecraftVersions.add(mcVersion)
-        requires {
-            slug = "fabric-api"
-        }
-    }
+//    curseforge {
+//        projectId = property("publish.curseforge").toString()
+//        accessToken = providers.environmentVariable("CURSEFORGE_TOKEN")
+//        minecraftVersions.add(mcVersion)
+//        requires {
+//            slug = "fabric-api"
+//        }
+//    }
 }
-*/
-/*
+
 publishing {
     repositories {
         maven("...") {
@@ -210,4 +215,3 @@ publishing {
         }
     }
 }
-*/
