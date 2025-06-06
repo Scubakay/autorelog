@@ -30,22 +30,18 @@ public abstract class DisconnectedScreenMixin extends Screen {
         Reconnect.getInstance().startReconnecting();
     }
 
-    @Inject(method = "init", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/widget/DirectionalLayoutWidget;add(Lnet/minecraft/client/gui/widget/Widget;)Lnet/minecraft/client/gui/widget/Widget;", ordinal = 2))
+    @Inject(method = "init", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/widget/DirectionalLayoutWidget;add(Lnet/minecraft/client/gui/widget/Widget;)Lnet/minecraft/client/gui/widget/Widget;", ordinal = 0))
     private void injectConnectionMessage(CallbackInfo ci) {
-//        if (Reconnect.getInstance().isActive()) {
-//            ReconnectMessageWidget widget = new ReconnectMessageWidget(this.textRenderer);
-//            this.grid.add(widget);
-//        }
-    }
-
-    @Inject(method = "init", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/widget/DirectionalLayoutWidget;add(Lnet/minecraft/client/gui/widget/Widget;)Lnet/minecraft/client/gui/widget/Widget;", ordinal = 2))
-    private void injectReconnectButton(CallbackInfo ci) {
         if (Reconnect.getInstance().isActive()) {
             ReconnectMessageWidget widget = new ReconnectMessageWidget(this.textRenderer);
             this.grid.add(widget);
         }
+    }
+
+    @Inject(method = "init", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/widget/DirectionalLayoutWidget;add(Lnet/minecraft/client/gui/widget/Widget;)Lnet/minecraft/client/gui/widget/Widget;", ordinal = 2))
+    private void injectReconnectButton(CallbackInfo ci) {
         if (Reconnect.getInstance().hasAddress()) {
-            ButtonWidget widget = ButtonWidget.builder(Text.literal("Relog now"), (button) -> MinecraftClient.getInstance().execute(Reconnect.getInstance()::connect)).width(200).build();
+            ButtonWidget widget = ButtonWidget.builder(Text.translatable("autorelog.disconnectedscreen.reconnectbutton"), (button) -> MinecraftClient.getInstance().execute(Reconnect.getInstance()::connect)).width(200).build();
             this.grid.add(widget);
         }
     }
