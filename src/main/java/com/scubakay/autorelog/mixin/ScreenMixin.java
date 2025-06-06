@@ -1,3 +1,6 @@
+//~ screenmixin_import
+//~ screenmixin_signature
+//~ screenmixin_drawwithshadow
 package com.scubakay.autorelog.mixin;
 
 import com.scubakay.autorelog.util.Reconnect;
@@ -11,13 +14,12 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(Screen.class)
 public class ScreenMixin {
     @Shadow protected TextRenderer textRenderer;
 
-    @Inject(method = "render", at = @At("TAIL"), locals = LocalCapture.CAPTURE_FAILSOFT)
+    @Inject(method = "render", at = @At("TAIL"))
     public void injectCountdown(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
         if (((Screen)(Object)this) instanceof DisconnectedScreen) {
             if(Reconnect.getInstance().isActive()) {
