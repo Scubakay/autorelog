@@ -19,10 +19,34 @@ in the `autorelog.json` file to `"mode": "AUTOMATIC"`.
 - Type `/autorelog` to activate automatic reconnection after 60 seconds.
 - Disconnect by leaving the server manually or use `/autorelog` again to deactivate.
 
+
+# FAQ
+
+## Will AutoRelog be backported to Minecraft 1.x.x?
+
+Since we use Stonecutter now (#37) it's much easier to backport to older versions. But since I don't necessarily play 
+those old versions, I'll wait with backporting further than 1.19 for now.
+
+If you play on an older version, and you want to use AutoRelog, just create 
+[a ticket](https://github.com/Scubakay/autorelog/issues/new) titled "1.18 support" or something, and I'll see if I have 
+time for it.
+
+## Version 1.x.x of AutoRelog crashes/doesn't work
+
+All the versions should work, but sometimes I miss something in the changes in Minecraft, Fabric, or the Yarn mappings.
+If you encounter any crashes or other issues just create [a ticket](https://github.com/Scubakay/autorelog/issues/new), 
+and I'll test for that version specifically.
+
+## Will AutoRelog be ported to Forge/Neoforge?
+
+I mostly play with Fabric mods, so I don't really have a need for a Forge version of AutoRelog. However, adding support
+might be something I'd like to add in the future.
+
 # Contributing
 
 If you want to help out by creating a pull request, please add version updates to a separate pull request.
 
-## Thanks
+## Thanks for your contribution!
 
 - [yichifauzi](https://github.com/yichifauzi) and [notlin4](https://github.com/notlin4) for Chinese translations
+- [EEHoveckis](https://github.com/EEHoveckis) for Latvian translations
