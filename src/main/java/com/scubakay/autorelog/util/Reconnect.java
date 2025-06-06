@@ -1,10 +1,12 @@
+//~ reconnect_import
+//~ reconnect_serverinfo
 package com.scubakay.autorelog.util;
 
 import com.scubakay.autorelog.AutoRelogClient;
 import com.scubakay.autorelog.config.Config;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen/*? >=1.20.5 {*/.multiplayer/*?}*/.ConnectScreen;
+import net.minecraft.client.gui.screen.multiplayer.ConnectScreen;
 import net.minecraft.client.gui.screen.TitleScreen;
 import net.minecraft.client.gui.screen.multiplayer.MultiplayerScreen;
 import net.minecraft.client.network.*;
@@ -26,6 +28,7 @@ public class Reconnect {
     }
 
     private static Reconnect instance;
+
     public static Reconnect getInstance() {
         if (instance == null) {
             instance = new Reconnect();
@@ -51,14 +54,14 @@ public class Reconnect {
 
     public void activate() {
         if (!active) {
-            if(Config.logging == Logging.ENABLED) AutoRelogClient.LOGGER.info("AutoRelog activated");
+            if (Config.logging == Logging.ENABLED) AutoRelogClient.LOGGER.info("AutoRelog activated");
             active = true;
         }
     }
 
     public void deactivate() {
         if (active) {
-            if(Config.logging == Logging.ENABLED) AutoRelogClient.LOGGER.info("AutoRelog deactivated");
+            if (Config.logging == Logging.ENABLED) AutoRelogClient.LOGGER.info("AutoRelog deactivated");
             timer.cancel();
             active = false;
             reconnecting = false;
@@ -69,10 +72,11 @@ public class Reconnect {
     public void startReconnecting() {
         if (active && !reconnecting) {
             attemptsLeft = Config.maxAttempts;
-            if(Config.logging == Logging.ENABLED) AutoRelogClient.LOGGER.info(String.format("Auto relogging every %d seconds", Config.interval));
+            if (Config.logging == Logging.ENABLED)
+                AutoRelogClient.LOGGER.info(String.format("Auto relogging every %d seconds", Config.interval));
             scheduleReconnect();
             reconnecting = true;
-        } else if(active && Config.maxAttempts > 0) {
+        } else if (active && Config.maxAttempts > 0) {
             attemptsLeft--;
             if (attemptsLeft == 0) {
                 if (Config.logging == Logging.ENABLED)
@@ -84,7 +88,7 @@ public class Reconnect {
                     AutoRelogClient.LOGGER.info(String.format("Failed to connect. Trying again in %d seconds with %d attempts left.", Config.interval, attemptsLeft));
                 this.scheduleReconnect();
             }
-        } else if(active) {
+        } else if (active) {
             if (Config.logging == Logging.ENABLED)
                 AutoRelogClient.LOGGER.info(String.format("Failed to connect. Trying again in %d seconds.", Config.interval));
             this.scheduleReconnect();
@@ -97,16 +101,16 @@ public class Reconnect {
             // If server is null this is single player, so don't parse it.
             address = ServerAddress.parse(server.address);
         }
-        if(active) {
+        if (active) {
             reconnecting = false;
-            if(Config.logging == Logging.ENABLED) AutoRelogClient.LOGGER.info("Relogged to server successfully!");
+            if (Config.logging == Logging.ENABLED) AutoRelogClient.LOGGER.info("Relogged to server successfully!");
             timer.cancel();
         }
     }
 
     private void scheduleReconnect() {
         // Don't try to reconnect when we don't have an address
-        if(address == null) return;
+        if (address == null) return;
 
         if (timer != null) {
             timer = new Timer();
@@ -124,8 +128,15 @@ public class Reconnect {
     }
 
     public void connect() {
-        if(Config.logging == Logging.ENABLED) AutoRelogClient.LOGGER.info("Trying to reconnect...");
-        ConnectScreen.connect(new MultiplayerScreen(new TitleScreen()), MinecraftClient.getInstance(), address, server, false/*? >=1.20.5 {*/, null/*?}*/);
+        if (Config.logging == Logging.ENABLED) AutoRelogClient.LOGGER.info("Trying to reconnect...");
+        ConnectScreen.connect(
+            new MultiplayerScreen(new TitleScreen()),
+            MinecraftClient.getInstance(),
+            address,
+            server
+            /*? >=1.20 {*/, false/*?}*/
+            /*? >=1.20.5 {*/, null/*?}*/
+        );
         timer.cancel();
     }
 }
