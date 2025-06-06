@@ -6,28 +6,22 @@ plugins {
 }
 stonecutter active "1.21" /* [SC] DO NOT EDIT */
 
-// Builds every version into `build/libs/{mod.version}/`
-stonecutter registerChiseled tasks.register("chiseledBuild", stonecutter.chiseled) {
-    group = "project"
-    ofTask("buildAndCollect")
-}
+stonecutter.parameters {
+    replacements {
+        // ConnectScreen was moved in 1.20.5
+        string { id = "reconnect_import"; direction = eval(metadata.version, "<1.20.5"); phase = "LAST"; replace("import net.minecraft.client.gui.screen.multiplayer.ConnectScreen;", "import net.minecraft.client.gui.screen.ConnectScreen;") }
 
-// Publishes every version
-stonecutter registerChiseled tasks.register("chiseledPublishMods", stonecutter.chiseled) {
-    group = "project"
-    ofTask("publishMods")
-}
+        // Before 1.20 we need to get ServerInfo somewhere else
+        string { id = "reconnect_serverinfo"; direction = eval(metadata.version, "<1.20"); phase = "LAST"; replace("handler.getServerInfo();", "MinecraftClient.getInstance().getCurrentServerEntry();") }
 
-stonecutter parameters {
-    /*
-    See src/main/java/com/example/TemplateMod.java
-    and https://stonecutter.kikugie.dev/
-    */
-    // Swaps replace the scope with a predefined value
-    swap("mod_version", "\"${property("mod.version")}\";")
-    // Constants add variables available in conditions
-    const("release", property("mod.id") != "template")
-    // Dependencies add targets to check versions against
-    // Using `node.property()` in this block gets the versioned property
-    dependency("fapi", node!!.project.property("deps.fabric_api").toString())
+        // The disconnect method was introduced in GameMenuScreen in 1.20
+        string { id = "gamemenuscreenmixin_import"; direction = eval(metadata.version, "<1.20"); phase = "LAST"; replace("import com.scubakay.autorelog.util.Reconnect;", "import com.scubakay.autorelog.util.Reconnect;\nimport net.minecraft.client.gui.widget.ButtonWidget;") }
+        string { id = "gamemenuscreenmixin_inject"; direction = eval(metadata.version, "<1.20"); phase = "LAST"; replace("@Inject(method = \"disconnect\", at = @At(\"HEAD\"))", "@Inject(method = \"method_19836\", at = @At(\"HEAD\"))") }
+        string { id = "gamemenuscreenmixin_signature"; direction = eval(metadata.version, "<1.20"); phase = "LAST"; replace("injectDisconnect(CallbackInfo ci)", "injectDisconnect(ButtonWidget button, CallbackInfo ci)") }
+
+        // DrawContext was introduced in 1.20
+        string { id = "screenmixin_import"; direction = eval(metadata.version, "<1.20"); phase = "LAST"; replace("import net.minecraft.client.gui.DrawContext;", "import net.minecraft.client.util.math.MatrixStack;\nimport net.minecraft.client.gui.DrawableHelper;") }
+        string { id = "screenmixin_signature";  direction = eval(metadata.version, "<1.20"); phase = "LAST"; replace("injectCountdown(DrawContext context", "injectCountdown(MatrixStack matrices") }
+        string { id = "screenmixin_drawwithshadow"; direction = eval(metadata.version, "<1.20"); phase = "LAST"; replace("context.drawTextWithShadow(this.textRenderer", "DrawableHelper.drawTextWithShadow(matrices, this.textRenderer") }
+    }
 }

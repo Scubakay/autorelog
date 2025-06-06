@@ -40,24 +40,6 @@ loom {
     }
 }
 
-stonecutter {
-    // ConnectScreen was moved in 1.20.5
-    replacement(eval(current.version, "<1.20.5"), "import net.minecraft.client.gui.screen.multiplayer.ConnectScreen;", "import net.minecraft.client.gui.screen.ConnectScreen;", identifier = "reconnect_import")
-
-    // Before 1.20 we need to get ServerInfo somewhere else
-    replacement(eval(current.version, "<1.20"), "server = handler.getServerInfo();", "server = MinecraftClient.getInstance().getCurrentServerEntry();", identifier = "reconnect_serverinfo")
-
-    // The disconnect method was introduced in GameMenuScreen in 1.20
-    replacement(eval(current.version, "<1.20"), "import com.scubakay.autorelog.util.Reconnect;", "import com.scubakay.autorelog.util.Reconnect;\nimport net.minecraft.client.gui.widget.ButtonWidget;", identifier = "gamemenuscreenmixin_import")
-    replacement(eval(current.version, "<1.20"), "@Inject(method = \"disconnect\", at = @At(\"HEAD\"))", "@Inject(method = \"method_19836\", at = @At(\"HEAD\"))", identifier = "gamemenuscreenmixin_inject")
-    replacement(eval(current.version, "<1.20"), "injectDisconnect(CallbackInfo ci)", "injectDisconnect(ButtonWidget button, CallbackInfo ci)", identifier = "gamemenuscreenmixin_signature")
-
-    // DrawContext was introduced in 1.20
-    replacement(eval(current.version, "<1.20"), "import net.minecraft.client.gui.DrawContext;", "import net.minecraft.client.util.math.MatrixStack;\nimport net.minecraft.client.gui.DrawableHelper;", identifier = "screenmixin_import")
-    replacement(eval(current.version, "<1.20"), "injectCountdown(DrawContext context", "injectCountdown(MatrixStack matrices", identifier = "screenmixin_signature")
-    replacement(eval(current.version, "<1.20"), "context.drawTextWithShadow(this.textRenderer", "DrawableHelper.drawTextWithShadow(matrices, this.textRenderer", identifier = "screenmixin_drawwithshadow")
-}
-
 repositories {
     fun strictMaven(url: String, alias: String, vararg groups: String) = exclusiveContent {
         forRepository { maven(url) { name = alias } }

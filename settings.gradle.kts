@@ -3,11 +3,12 @@ pluginManagement {
         mavenCentral()
         gradlePluginPortal()
         maven("https://maven.fabricmc.net/")
+        maven("https://maven.kikugie.dev/snapshots")
     }
 }
 
 plugins {
-    id("dev.kikugie.stonecutter") version "0.6"
+    id("dev.kikugie.stonecutter") version "0.7-alpha.20"
 }
 
 stonecutter {
@@ -15,7 +16,7 @@ stonecutter {
     centralScript = "build.gradle.kts"
 
     shared {
-        versions("1.19", "1.19.3", "1.20", "1.20.5", "1.21")
+        versions("1.21", "1.20.5", "1.20", "1.19.3", "1.19")
         vcsVersion = "1.21"
     }
     create(rootProject)
