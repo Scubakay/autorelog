@@ -6,6 +6,11 @@ plugins {
 }
 stonecutter active "1.21" /* [SC] DO NOT EDIT */
 
+stonecutter.tasks {
+    // Order publishing: https://stonecutter.kikugie.dev/blog/changes/0.7.html#_0-7-alpha-21
+    order(named("publishMods"))
+}
+
 stonecutter.parameters {
     replacements {
         // ConnectScreen was moved in 1.20.5
