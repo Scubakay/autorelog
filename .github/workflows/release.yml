@@ -29,9 +29,9 @@ jobs:
         if: ${{ runner.os != 'Windows' }}
         run: chmod +x ./gradlew
       - name: build
-        run: ./gradlew chiseledBuild
+        run: ./gradlew build
       - name: release
-        run: ./gradlew chiseledPublishMods
+        run: ./gradlew publishMods
         env:
           MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
       - name: capture build artifacts
