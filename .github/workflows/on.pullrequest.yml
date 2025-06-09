@@ -1,0 +1,17 @@
+name: 'New PR Notification'
+on:
+  pull_request:
+    types: [opened, reopened]
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Notify Discord
+        uses: discord-actions/message@v2
+        with:
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          message: |
+            # PR (re)opened on ${{ github.repository }}
+            **Creator:** ${{ github.event.pull_request.user.login }}
+            **Link:** [${{ github.event.pull_request.title }}](${{ github.event.pull_request.html_url }})

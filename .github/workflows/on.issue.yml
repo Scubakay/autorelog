@@ -1,0 +1,17 @@
+name: 'New Issue Notification'
+on:
+  issues:
+    types: [opened, reopened]
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Notify Discord
+        uses: discord-actions/message@v2
+        with:
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          message: |
+            # Issue (re)opened on ${{ github.repository }}
+            **Creator:** ${{ github.event.issue.user.login }}
+            **Link:** [${{ github.event.issue.title }}](${{ github.event.issue.html_url }})
