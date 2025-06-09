@@ -25,7 +25,6 @@ val mod = ModData()
 val deps = ModDependencies()
 val dev = DevDependencies()
 val mcVersion = stonecutter.current.version
-val authmeVersion = dev["authme"]
 val mcDep = property("mod.mc_dep").toString()
 
 version = "${mod.version}+$mcVersion"

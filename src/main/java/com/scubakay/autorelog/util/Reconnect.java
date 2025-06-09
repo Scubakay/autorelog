@@ -11,6 +11,7 @@ import net.minecraft.client.gui.screen.TitleScreen;
 import net.minecraft.client.gui.screen.multiplayer.MultiplayerScreen;
 import net.minecraft.client.network.*;
 
+import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -85,12 +86,12 @@ public class Reconnect {
                 countdown = -1;
             } else {
                 if (Config.logging == Logging.ENABLED)
-                    AutoRelogClient.LOGGER.info(String.format("Failed to connect. Trying again in %d seconds with %d attempts left.", Config.interval, attemptsLeft));
+                    AutoRelogClient.LOGGER.info("Failed to connect. Trying again in {} seconds with {} attempts left.", Config.interval, attemptsLeft);
                 this.scheduleReconnect();
             }
         } else if (active) {
             if (Config.logging == Logging.ENABLED)
-                AutoRelogClient.LOGGER.info(String.format("Failed to connect. Trying again in %d seconds.", Config.interval));
+                AutoRelogClient.LOGGER.info("Trying again in {} seconds.", Config.interval);
             this.scheduleReconnect();
         }
     }
@@ -116,7 +117,7 @@ public class Reconnect {
             timer = new Timer();
         }
         countdown = Config.interval;
-        timer.schedule(new TimerTask() {
+        Objects.requireNonNull(timer).schedule(new TimerTask() {
             @Override
             public void run() {
                 if (countdown <= 0) {
