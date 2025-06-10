@@ -1,9 +1,12 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+
 plugins {
     `maven-publish`
     id("fabric-loom")
     //id("dev.kikugie.j52j")
     id("me.modmuss50.mod-publish-plugin")
     id("com.star-zero.gradle.githook") version "1.2.1"
+    id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
 class ModData {
@@ -48,6 +51,11 @@ repositories {
     strictMaven("https://api.modrinth.com/maven", "Modrinth", "maven.modrinth")
 }
 
+val shadowLibrary: Configuration by configurations.creating {
+    isCanBeResolved = true
+    isCanBeConsumed = false
+}
+
 dependencies {
     fun fapi(vararg modules: String) = modules.forEach {
         modImplementation(fabricApi.module(it, deps["fabric_api"]))
@@ -68,6 +76,8 @@ dependencies {
     // Dependencies
     modImplementation("maven.modrinth:midnightlib:${deps["midnightlib"]}")
     include("maven.modrinth:midnightlib:${deps["midnightlib"]}")
+    implementation("maven.modrinth:admiral:${deps["admiral"]}")
+    shadowLibrary("maven.modrinth:admiral:${deps["admiral"]}")
 
     // Dev mods
     modImplementation("maven.modrinth:modmenu:${dev["modmenu"]}-fabric")
@@ -98,6 +108,18 @@ java {
     val java = if (stonecutter.eval(mcVersion, ">=1.20.6")) JavaVersion.VERSION_21 else JavaVersion.VERSION_17
     targetCompatibility = java
     sourceCompatibility = java
+}
+
+tasks.named<ShadowJar>("shadowJar") {
+    configurations = listOf(shadowLibrary)
+    archiveClassifier = "dev-shadow"
+    relocate("de.maxhenkel.admiral", "com.scubakay.autorelog.admiral")
+}
+
+tasks {
+    remapJar {
+        inputFile = shadowJar.get().archiveFile
+    }
 }
 
 githook {
