@@ -1,8 +1,3 @@
-- Add multiversion support through [Stonecutter](https://stonecutter.kikugie.dev/)
-- Added support for all previously supported versions, and a bit more
-- Added version support:
-  - 1.21 - 1.21.5
-  - 1.20.5 - 1.20.6
-  - 1.20 - 1.20.4
-  - 1.19.3 - 1.19.4
-  - 1.19 - 1.19.2
+# Bugfixes
+
+- #27 Fixed a bug where afk detection activated AutoRelog in singleplayer worlds
