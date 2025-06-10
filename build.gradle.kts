@@ -76,7 +76,7 @@ dependencies {
     // Dependencies
     modImplementation("maven.modrinth:midnightlib:${deps["midnightlib"]}")
     include("maven.modrinth:midnightlib:${deps["midnightlib"]}")
-    implementation("maven.modrinth:admiral:${deps["admiral"]}")
+    modImplementation("maven.modrinth:admiral:${deps["admiral"]}")
     shadowLibrary("maven.modrinth:admiral:${deps["admiral"]}")
 
     // Dev mods
