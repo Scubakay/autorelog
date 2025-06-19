@@ -13,6 +13,7 @@ class ModData {
     val id = property("mod.id").toString()
     val name = property("mod.name").toString()
     val version = property("mod.version").toString()
+    val title = property("mod.mc_title").toString()
     val group = property("mod.group").toString()
 }
 
@@ -29,8 +30,9 @@ val deps = ModDependencies()
 val dev = DevDependencies()
 val mcVersion = stonecutter.current.version
 val mcDep = property("mod.mc_dep").toString()
+val publish = property("mod.publish")
 
-version = "${mod.version}+$mcVersion"
+version = "${mod.version}+${mod.title}"
 group = mod.group
 base { archivesName.set(mod.id) }
 
@@ -76,16 +78,14 @@ dependencies {
     // Dependencies
     modImplementation("maven.modrinth:midnightlib:${deps["midnightlib"]}")
     include("maven.modrinth:midnightlib:${deps["midnightlib"]}")
-    modImplementation("maven.modrinth:admiral:${deps["admiral"]}")
-    shadowLibrary("maven.modrinth:admiral:${deps["admiral"]}")
 
     // Dev mods
-    modImplementation("maven.modrinth:modmenu:${dev["modmenu"]}-fabric")
-    modImplementation("maven.modrinth:auth-me:${dev["authme"]}-fabric")
-    if (stonecutter.eval(mcVersion, ">=1.21.6")) {
-        modImplementation("maven.modrinth:resourceful-config:${dev["authmeconfig"]}-fabric")
+    modLocalRuntime("maven.modrinth:modmenu:${dev["modmenu"]}-fabric")
+    modLocalRuntime("maven.modrinth:auth-me:${dev["authme"]}-fabric")
+    if (stonecutter.eval(mcVersion, ">=1.21.5")) {
+        modLocalRuntime("maven.modrinth:resourceful-config:${dev["authmeconfig"]}-fabric")
     } else {
-        modImplementation("maven.modrinth:cloth-config:${dev["authmeconfig"]}-fabric")
+        modLocalRuntime("maven.modrinth:cloth-config:${dev["authmeconfig"]}-fabric")
     }
 }
 
@@ -97,7 +97,7 @@ loom {
     }
 
     runConfigs.all {
-        ideConfigGenerated(true)
+        ideConfigGenerated(false)
         vmArgs("-Dmixin.debug.export=true")
         runDir = "../../run"
     }
@@ -159,33 +159,55 @@ tasks.register<Copy>("buildAndCollect") {
     dependsOn("build")
 }
 
-publishMods {
-    fun versionList(prop: String) = findProperty(prop)?.toString()
-        ?.split("\\s+".toRegex())
-        ?.map { it.trim() }
-        ?: emptyList()
-    val versions = versionList("mod.mc_targets")
+if (stonecutter.current.isActive) {
+    rootProject.tasks.register("Run Active Client") {
+        group = "stonecutter"
+        dependsOn(tasks.named("runClient"))
+    }
 
-    file = tasks.remapJar.get().archiveFile
-    additionalFiles.from(tasks.remapSourcesJar.get().archiveFile)
-    displayName = "${mod.name} ${mod.version} for $mcVersion"
-    version = mod.version
-    changelog = rootProject.file("CHANGELOG.md").readText()
-    type = STABLE
-    modLoaders.add("fabric")
-
-    dryRun = providers.environmentVariable("MODRINTH_TOKEN")
-        .getOrNull() == null
-    // || providers.environmentVariable("CURSEFORGE_TOKEN").getOrNull() == null
-
-    modrinth {
-        projectId = property("publish.modrinth").toString()
-        accessToken = providers.environmentVariable("MODRINTH_TOKEN")
-        minecraftVersions.addAll(versions)
-        requires {
-            slug = "fabric-api"
+    loom {
+        runs {
+            create("Run Active Client") {
+                client()
+                ideConfigGenerated(true)
+                runDir = "../../run"
+                name = "Run Active Client"
+                vmArgs("-Dmixin.debug.export=true")
+                property("fabric.mcVersion", mcVersion)
+            }
         }
     }
+}
+
+if (publish == true || publish == "true") {
+    publishMods {
+        fun versionList(prop: String) = findProperty(prop)?.toString()
+            ?.split("\\s+".toRegex())
+            ?.map { it.trim() }
+            ?: emptyList()
+
+        val versions = versionList("mod.mc_targets")
+
+        file = tasks.remapJar.get().archiveFile
+        additionalFiles.from(tasks.remapSourcesJar.get().archiveFile)
+        displayName = "${mod.name} ${mod.version} for $mcVersion"
+        version = mod.version
+        changelog = rootProject.file("CHANGELOG.md").readText()
+        type = STABLE
+        modLoaders.add("fabric")
+
+        dryRun = providers.environmentVariable("MODRINTH_TOKEN")
+            .getOrNull() == null
+        // || providers.environmentVariable("CURSEFORGE_TOKEN").getOrNull() == null
+
+        modrinth {
+            projectId = property("publish.modrinth").toString()
+            accessToken = providers.environmentVariable("MODRINTH_TOKEN")
+            minecraftVersions.addAll(versions)
+            requires {
+                slug = "fabric-api"
+            }
+        }
 
 //    curseforge {
 //        projectId = property("publish.curseforge").toString()
@@ -195,26 +217,29 @@ publishMods {
 //            slug = "fabric-api"
 //        }
 //    }
-}
+    }
 
-publishing {
-    repositories {
-        maven("...") {
-            name = "..."
-            credentials(PasswordCredentials::class.java)
-            authentication {
-                create<BasicAuthentication>("basic")
+    publishing {
+        repositories {
+            maven("...") {
+                name = "..."
+                credentials(PasswordCredentials::class.java)
+                authentication {
+                    create<BasicAuthentication>("basic")
+                }
+            }
+        }
+
+        publications {
+            create<MavenPublication>("mavenJava") {
+                groupId = "${property("mod.group")}.${mod.id}"
+                artifactId = mod.version
+                version = mcVersion
+
+                from(components["java"])
             }
         }
     }
-
-    publications {
-        create<MavenPublication>("mavenJava") {
-            groupId = "${property("mod.group")}.${mod.id}"
-            artifactId = mod.version
-            version = mcVersion
-
-            from(components["java"])
-        }
-    }
+} else {
+    logger.lifecycle("Skipping publishing ${projectDir.name}: 'mod.publish' property is false.")
 }
