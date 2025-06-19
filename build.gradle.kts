@@ -111,7 +111,7 @@ java {
 
 tasks.named<ShadowJar>("shadowJar") {
     configurations = listOf(shadowLibrary)
-    archiveClassifier = "dev-shadow"
+    archiveClassifier = "shadow"
     relocate("de.maxhenkel.admiral", "com.scubakay.autorelog.admiral")
 }
 
