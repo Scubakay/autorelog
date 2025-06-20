@@ -20,5 +20,6 @@
   "autorelog.midnightconfig.enum.Logging.DISABLED": "Disabled",
   "autorelog.disconnectedscreen.reconnecting": "Reconnecting...",
   "autorelog.disconnectedscreen.countdown": "Reconnecting in %d seconds",
-  "autorelog.disconnectedscreen.failed": "All reconnection attempts failed"
+  "autorelog.disconnectedscreen.failed": "All reconnection attempts failed",
+  "autorelog.disconnectedscreen.reconnectbutton": "Reconnect"
 }
