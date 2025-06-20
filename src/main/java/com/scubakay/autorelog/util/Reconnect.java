@@ -1,15 +1,18 @@
-//~ reconnect_import
-//~ reconnect_serverinfo
 package com.scubakay.autorelog.util;
 
 import com.scubakay.autorelog.AutoRelogClient;
 import com.scubakay.autorelog.config.Config;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.multiplayer.ConnectScreen;
 import net.minecraft.client.gui.screen.TitleScreen;
 import net.minecraft.client.gui.screen.multiplayer.MultiplayerScreen;
 import net.minecraft.client.network.*;
+
+//? >= 1.20.5 {
+import net.minecraft.client.gui.screen.multiplayer.ConnectScreen;
+//?} else {
+/*import net.minecraft.client.gui.screen.ConnectScreen;
+*///?}
 
 import java.util.Objects;
 import java.util.Timer;
@@ -101,7 +104,11 @@ public class Reconnect {
     }
 
     public void join(ClientPlayNetworkHandler handler) {
+        //? >1.20 {
         server = handler.getServerInfo();
+        //?} else {
+        /*MinecraftClient.getInstance().getCurrentServerEntry();
+        *///?}
         if (server != null) {
             // If server is null this is single player, so don't parse it.
             address = ServerAddress.parse(server.address);

@@ -5,7 +5,6 @@ plugins {
     id("fabric-loom")
     //id("dev.kikugie.j52j")
     id("me.modmuss50.mod-publish-plugin")
-    id("com.star-zero.gradle.githook") version "1.2.1"
     id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
@@ -97,7 +96,7 @@ loom {
     }
 
     runConfigs.all {
-        ideConfigGenerated(false)
+        ideConfigGenerated(true)
         vmArgs("-Dmixin.debug.export=true")
         runDir = "../../run"
     }
@@ -119,14 +118,6 @@ tasks.named<ShadowJar>("shadowJar") {
 tasks {
     remapJar {
         inputFile = shadowJar.get().archiveFile
-    }
-}
-
-githook {
-    hooks {
-        register("pre-commit") {
-            shell = "./gradlew \"Reset active project\""
-        }
     }
 }
 
