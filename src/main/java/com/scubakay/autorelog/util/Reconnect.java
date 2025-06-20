@@ -81,7 +81,7 @@ public class Reconnect {
         if (active && !reconnecting) {
             attemptsLeft = Config.maxAttempts;
             if (Config.logging == Logging.ENABLED)
-                AutoRelogClient.LOGGER.info(String.format("Auto relogging every %d seconds", Config.interval));
+                AutoRelogClient.LOGGER.info("Auto relogging every {} seconds", Config.interval);
             scheduleReconnect();
             reconnecting = true;
         } else if (active && Config.maxAttempts > 0) {
@@ -104,11 +104,7 @@ public class Reconnect {
     }
 
     public void join(ClientPlayNetworkHandler handler) {
-        //? >1.20 {
         server = handler.getServerInfo();
-        //?} else {
-        /*MinecraftClient.getInstance().getCurrentServerEntry();
-        *///?}
         if (server != null) {
             // If server is null this is single player, so don't parse it.
             address = ServerAddress.parse(server.address);

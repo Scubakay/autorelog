@@ -6,7 +6,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.DisconnectedScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.gui.widget.DirectionalLayoutWidget;
 import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -15,11 +14,23 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+//? >= 1.20.2 {
+import net.minecraft.client.gui.widget.DirectionalLayoutWidget;
+//?} else {
+/*import net.minecraft.client.gui.widget.GridWidget;
+import net.minecraft.client.gui.widget.TextWidget;
+import com.llamalad7.mixinextras.sugar.Local;
+*///?}
+
 @Mixin(DisconnectedScreen.class)
 public abstract class DisconnectedScreenMixin extends Screen {
     @Final
     @Shadow
+    //? >= 1.20.2 {
     private DirectionalLayoutWidget grid;
+    //?} else {
+    /*private GridWidget grid;
+    *///?}
 
     protected DisconnectedScreenMixin(Text title) {
         super(title);
@@ -30,19 +41,29 @@ public abstract class DisconnectedScreenMixin extends Screen {
         Reconnect.getInstance().startReconnecting();
     }
 
+    //? >= 1.20.2 {
     @Inject(method = "init", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/widget/DirectionalLayoutWidget;add(Lnet/minecraft/client/gui/widget/Widget;)Lnet/minecraft/client/gui/widget/Widget;", ordinal = 0))
     private void injectConnectionMessage(CallbackInfo ci) {
+    //?} else {
+    /*@Inject(method = "init", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/widget/GridWidget$Adder;add(Lnet/minecraft/client/gui/widget/Widget;)Lnet/minecraft/client/gui/widget/Widget;", ordinal = 0))
+    private void injectConnectionMessage(CallbackInfo ci, @Local GridWidget.Adder adder) {
+    *///?}
         if (Reconnect.getInstance().isActive()) {
             ReconnectMessageWidget widget = new ReconnectMessageWidget(this.textRenderer);
-            this.grid.add(widget);
+            /*? >=1.20.2 {*/this.grid/*?} else {*//*adder*//*?}*/.add(widget);
         }
     }
 
+    //? >= 1.20.2 {
     @Inject(method = "init", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/widget/DirectionalLayoutWidget;add(Lnet/minecraft/client/gui/widget/Widget;)Lnet/minecraft/client/gui/widget/Widget;", ordinal = 2))
     private void injectReconnectButton(CallbackInfo ci) {
+    //?} else {
+    /*@Inject(method = "init", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/widget/GridWidget$Adder;add(Lnet/minecraft/client/gui/widget/Widget;)Lnet/minecraft/client/gui/widget/Widget;", ordinal = 2))
+    private void injectReconnectButton(CallbackInfo ci, @Local GridWidget.Adder adder) {
+    *///?}
         if (Reconnect.getInstance().hasAddress()) {
             ButtonWidget widget = ButtonWidget.builder(Text.translatable("autorelog.disconnectedscreen.reconnectbutton"), (button) -> MinecraftClient.getInstance().execute(Reconnect.getInstance()::connect)).width(200).build();
-            this.grid.add(widget);
+            /*? >=1.20.2 {*/this.grid/*?} else {*//*adder*//*?}*/.add(widget);
         }
     }
 }
