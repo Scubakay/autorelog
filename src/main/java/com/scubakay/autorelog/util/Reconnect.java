@@ -141,12 +141,12 @@ public class Reconnect {
             deactivate();
         }
         ConnectScreen.connect(
-            new MultiplayerScreen(new TitleScreen()),
-            MinecraftClient.getInstance(),
-            address,
-            server
-            /*? >=1.20 {*/, false/*?}*/
-            /*? >=1.20.5 {*/, null/*?}*/
+                new MultiplayerScreen(new TitleScreen()),
+                MinecraftClient.getInstance(),
+                address,
+                server
+                /*? >=1.20 {*/, false/*?}*/
+                /*? >=1.20.5 {*/, null/*?}*/
         );
         timer.cancel();
     }

@@ -1,8 +1,7 @@
 package com.scubakay.autorelog.mixin;
 
 import com.scubakay.autorelog.util.Reconnect;
-import com.scubakay.autorelog.util.ReconnectMessageWidget;
-import net.minecraft.client.MinecraftClient;
+import com.scubakay.autorelog.util.ReconnectButtonWidget;
 import net.minecraft.client.gui.screen.DisconnectedScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -42,19 +41,6 @@ public abstract class DisconnectedScreenMixin extends Screen {
     }
 
     //? >= 1.20.2 {
-    @Inject(method = "init", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/widget/DirectionalLayoutWidget;add(Lnet/minecraft/client/gui/widget/Widget;)Lnet/minecraft/client/gui/widget/Widget;", ordinal = 0))
-    private void injectConnectionMessage(CallbackInfo ci) {
-    //?} else {
-    /*@Inject(method = "init", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/widget/GridWidget$Adder;add(Lnet/minecraft/client/gui/widget/Widget;)Lnet/minecraft/client/gui/widget/Widget;", ordinal = 0))
-    private void injectConnectionMessage(CallbackInfo ci, @Local GridWidget.Adder adder) {
-    *///?}
-        if (Reconnect.getInstance().isActive()) {
-            ReconnectMessageWidget widget = new ReconnectMessageWidget(this.textRenderer);
-            /*? >=1.20.2 {*/this.grid/*?} else {*//*adder*//*?}*/.add(widget);
-        }
-    }
-
-    //? >= 1.20.2 {
     @Inject(method = "init", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/widget/DirectionalLayoutWidget;add(Lnet/minecraft/client/gui/widget/Widget;)Lnet/minecraft/client/gui/widget/Widget;", ordinal = 2))
     private void injectReconnectButton(CallbackInfo ci) {
     //?} else {
@@ -62,7 +48,7 @@ public abstract class DisconnectedScreenMixin extends Screen {
     private void injectReconnectButton(CallbackInfo ci, @Local GridWidget.Adder adder) {
     *///?}
         if (Reconnect.getInstance().hasAddress()) {
-            ButtonWidget widget = ButtonWidget.builder(Text.translatable("autorelog.disconnectedscreen.reconnectbutton"), (button) -> MinecraftClient.getInstance().execute(Reconnect.getInstance()::connect)).width(200).build();
+            ButtonWidget widget = ReconnectButtonWidget.builder().width(200).build();
             /*? >=1.20.2 {*/this.grid/*?} else {*//*adder*//*?}*/.add(widget);
         }
     }

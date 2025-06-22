@@ -29,7 +29,7 @@ val deps = ModDependencies()
 val dev = DevDependencies()
 val mcVersion = stonecutter.current.version
 val mcDep = property("mod.mc_dep").toString()
-val publish = property("mod.publish")
+val publish = property("mod.publish").toString().toBoolean()
 
 version = "${mod.version}+${mod.title}"
 group = mod.group
@@ -89,6 +89,8 @@ dependencies {
 }
 
 loom {
+    accessWidenerPath = file("../../src/main/resources/aw/autorelog.accesswidener")
+
     decompilers {
         get("vineflower").apply { // Adds names to lambdas - useful for mixins
             options.put("mark-corresponding-synthetics", "1")
@@ -170,35 +172,34 @@ if (stonecutter.current.isActive) {
     }
 }
 
-if (publish == true || publish == "true") {
-    publishMods {
-        fun versionList(prop: String) = findProperty(prop)?.toString()
-            ?.split("\\s+".toRegex())
-            ?.map { it.trim() }
-            ?: emptyList()
+publishMods {
+    fun versionList(prop: String) = findProperty(prop)?.toString()
+        ?.split("\\s+".toRegex())
+        ?.map { it.trim() }
+        ?: emptyList()
 
-        val versions = versionList("mod.mc_targets")
+    val versions = versionList("mod.mc_targets")
 
-        file = tasks.remapJar.get().archiveFile
-        additionalFiles.from(tasks.remapSourcesJar.get().archiveFile)
-        displayName = "${mod.name} ${mod.version} for $mcVersion"
-        version = mod.version
-        changelog = rootProject.file("CHANGELOG.md").readText()
-        type = STABLE
-        modLoaders.add("fabric")
+    file = tasks.remapJar.get().archiveFile
+    additionalFiles.from(tasks.remapSourcesJar.get().archiveFile)
+    displayName = "${mod.name} ${mod.version} for $mcVersion"
+    version = mod.version
+    changelog = rootProject.file("CHANGELOG.md").readText()
+    type = STABLE
+    modLoaders.add("fabric")
 
-        dryRun = providers.environmentVariable("MODRINTH_TOKEN")
-            .getOrNull() == null
-        // || providers.environmentVariable("CURSEFORGE_TOKEN").getOrNull() == null
+    dryRun = !publish && providers.environmentVariable("MODRINTH_TOKEN")
+        .getOrNull() == null
+    // || providers.environmentVariable("CURSEFORGE_TOKEN").getOrNull() == null
 
-        modrinth {
-            projectId = property("publish.modrinth").toString()
-            accessToken = providers.environmentVariable("MODRINTH_TOKEN")
-            minecraftVersions.addAll(versions)
-            requires {
-                slug = "fabric-api"
-            }
+    modrinth {
+        projectId = property("publish.modrinth").toString()
+        accessToken = providers.environmentVariable("MODRINTH_TOKEN")
+        minecraftVersions.addAll(versions)
+        requires {
+            slug = "fabric-api"
         }
+    }
 
 //    curseforge {
 //        projectId = property("publish.curseforge").toString()
@@ -208,29 +209,26 @@ if (publish == true || publish == "true") {
 //            slug = "fabric-api"
 //        }
 //    }
-    }
+}
 
-    publishing {
-        repositories {
-            maven("...") {
-                name = "..."
-                credentials(PasswordCredentials::class.java)
-                authentication {
-                    create<BasicAuthentication>("basic")
-                }
-            }
-        }
-
-        publications {
-            create<MavenPublication>("mavenJava") {
-                groupId = "${property("mod.group")}.${mod.id}"
-                artifactId = mod.version
-                version = mcVersion
-
-                from(components["java"])
+publishing {
+    repositories {
+        maven("...") {
+            name = "..."
+            credentials(PasswordCredentials::class.java)
+            authentication {
+                create<BasicAuthentication>("basic")
             }
         }
     }
-} else {
-    logger.lifecycle("Skipping publishing ${projectDir.name}: 'mod.publish' property is false.")
+
+    publications {
+        create<MavenPublication>("mavenJava") {
+            groupId = "${property("mod.group")}.${mod.id}"
+            artifactId = mod.version
+            version = mcVersion
+
+            from(components["java"])
+        }
+    }
 }

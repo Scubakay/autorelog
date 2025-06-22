@@ -1,3 +1,3 @@
-# Bugfixes
-
-- #27 Fixed a bug where afk detection activated AutoRelog in singleplayer worlds
+# Features
+- Connecting countdown moved to button
+- Clicking the button skips the countdown and attempts to reconnect immediately

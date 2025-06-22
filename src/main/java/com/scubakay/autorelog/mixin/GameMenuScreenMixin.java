@@ -7,10 +7,9 @@ import net.minecraft.client.gui.screen.GameMenuScreen;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-//? >= 1.20 {
-import net.minecraft.client.gui.widget.ButtonWidget;
-//?}
-
+//? < 1.20 {
+/*import net.minecraft.client.gui.widget.ButtonWidget;
+*///?}
 
 @Mixin(GameMenuScreen.class)
 public class GameMenuScreenMixin {
