@@ -9,8 +9,7 @@
     "DisconnectedScreenMixin",
     "GameMenuScreenMixin",
     "ClientPlayerEntityMixin",
-    "MultiplayerScreenMixin",
-    "ScreenMixin"
+    "MultiplayerScreenMixin"
   ],
   "injectors": {
     "defaultRequire": 1

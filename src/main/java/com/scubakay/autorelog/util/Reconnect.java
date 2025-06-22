@@ -1,15 +1,18 @@
-//~ reconnect_import
-//~ reconnect_serverinfo
 package com.scubakay.autorelog.util;
 
 import com.scubakay.autorelog.AutoRelogClient;
 import com.scubakay.autorelog.config.Config;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.multiplayer.ConnectScreen;
 import net.minecraft.client.gui.screen.TitleScreen;
 import net.minecraft.client.gui.screen.multiplayer.MultiplayerScreen;
 import net.minecraft.client.network.*;
+
+//? >= 1.20.5 {
+import net.minecraft.client.gui.screen.multiplayer.ConnectScreen;
+//?} else {
+/*import net.minecraft.client.gui.screen.ConnectScreen;
+*///?}
 
 import java.util.Objects;
 import java.util.Timer;
@@ -39,6 +42,10 @@ public class Reconnect {
 
     private Reconnect() {
         timer = new Timer();
+    }
+
+    public boolean hasAddress() {
+        return address != null;
     }
 
     public boolean isActive() {
@@ -74,7 +81,7 @@ public class Reconnect {
         if (active && !reconnecting) {
             attemptsLeft = Config.maxAttempts;
             if (Config.logging == Logging.ENABLED)
-                AutoRelogClient.LOGGER.info(String.format("Auto relogging every %d seconds", Config.interval));
+                AutoRelogClient.LOGGER.info("Auto relogging every {} seconds", Config.interval);
             scheduleReconnect();
             reconnecting = true;
         } else if (active && Config.maxAttempts > 0) {
@@ -97,7 +104,7 @@ public class Reconnect {
     }
 
     public void join(ClientPlayNetworkHandler handler) {
-        server = handler.getServerInfo();
+        server = /*? >= 1.19.3 {*/handler.getServerInfo();/*?} else {*//*MinecraftClient.getInstance().getCurrentServerEntry();*//*?}*/
         if (server != null) {
             // If server is null this is single player, so don't parse it.
             address = ServerAddress.parse(server.address);
@@ -130,13 +137,16 @@ public class Reconnect {
 
     public void connect() {
         if (Config.logging == Logging.ENABLED) AutoRelogClient.LOGGER.info("Trying to reconnect...");
+        if (attemptsLeft <= 0) {
+            deactivate();
+        }
         ConnectScreen.connect(
-            new MultiplayerScreen(new TitleScreen()),
-            MinecraftClient.getInstance(),
-            address,
-            server
-            /*? >=1.20 {*/, false/*?}*/
-            /*? >=1.20.5 {*/, null/*?}*/
+                new MultiplayerScreen(new TitleScreen()),
+                MinecraftClient.getInstance(),
+                address,
+                server
+                /*? >=1.20 {*/, false/*?}*/
+                /*? >=1.20.5 {*/, null/*?}*/
         );
         timer.cancel();
     }

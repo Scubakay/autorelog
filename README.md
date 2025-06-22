@@ -8,17 +8,32 @@ A mod that lets you automatically reconnect to a restarting Minecraft server whe
 
 Make sure to have proper overflow protection in your farms!
 
-## Automatic mode
+## Using AutoRelog
+
+When getting disconnected from a server with AutoRelog active (see AFK Detection),
+the disconnect screen will show a button with a countdown before it will try to 
+automatically reconnect to the server:
+
+![reconnectinginxseconds.png](docs/img/reconnectinginxseconds.png)
+
+Hovering on the button will give you the option to try reconnecting right away. 
+This can be used if you know the server is accessible again before the countdown is over:
+
+![reconnectnow.png](docs/img/reconnectnow.png)
+
+When AutoRelog is trying to reconnect the button becomes inactive:
+
+![reconnecting.png](docs/img/reconnecting.png)
+
+## AFK Detection
 
 AutoRelog wil automatically try to reconnect 60 seconds after you are disconnected. If you
 want to activate AutoRelog manually, check out the Mod Menu settings, or change the setting
 in the `autorelog.json` file to `"mode": "AUTOMATIC"`.
 
-## Manual mode
+Type `/autorelog` to activate automatic reconnection after 60 seconds.
 
-- Type `/autorelog` to activate automatic reconnection after 60 seconds.
-- Disconnect by leaving the server manually or use `/autorelog` again to deactivate.
-
+Leave the server or use `/autorelog` again to deactivate.
 
 # FAQ
 
