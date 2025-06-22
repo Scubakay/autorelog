@@ -5,17 +5,15 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
+//? >=1.19.3 {
+import java.util.function.Supplier;
+//?}
+
 public class ReconnectButtonWidget extends ButtonWidget {
     private final Reconnect reconnect;
 
-    public static ReconnectButtonWidgetBuilder builder() {
-        return new ReconnectButtonWidgetBuilder(
-                (button) -> MinecraftClient.getInstance().execute(Reconnect.getInstance()::connect)
-        );
-    }
-
-    protected ReconnectButtonWidget(int x, int y, int width, int height, Text message, PressAction onPress, NarrationSupplier narrationSupplier) {
-        super(x, y, width, height, message, onPress, narrationSupplier);
+    public ReconnectButtonWidget() {
+        super(0, 0, 200, 20, Text.empty(), (button) -> MinecraftClient.getInstance().execute(Reconnect.getInstance()::connect) /*? >=1.19.3 {*/, Supplier::get/*?}*/);
         reconnect = Reconnect.getInstance();
     }
 
@@ -34,17 +32,5 @@ public class ReconnectButtonWidget extends ButtonWidget {
             message =  Text.translatable("autorelog.disconnectedscreen.reconnecting").formatted(Formatting.DARK_GREEN);
         }
         return message;
-    }
-
-    public static class ReconnectButtonWidgetBuilder extends ButtonWidget.Builder {
-        public ReconnectButtonWidgetBuilder(PressAction onPress) {
-            super(Text.empty(), onPress);
-        }
-
-        public ButtonWidget build() {
-            ButtonWidget buttonWidget = new ReconnectButtonWidget(this.x, this.y, this.width, this.height, this.message, this.onPress, this.narrationSupplier);
-            buttonWidget.setTooltip(this.tooltip);
-            return buttonWidget;
-        }
     }
 }

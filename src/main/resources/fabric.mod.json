@@ -28,10 +28,9 @@
   "mixins": [
     "autorelog.mixins.json"
   ],
-  "accessWidener" : "aw/autorelog.accesswidener",
   "depends": {
     "fabricloader": ">=0.15",
     "minecraft": "${mcdep}",
-    "${fabrickey}": "*"
+    "fabric": "*"
   }
 }

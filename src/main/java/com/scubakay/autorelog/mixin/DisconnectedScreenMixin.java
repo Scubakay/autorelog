@@ -19,6 +19,8 @@ import org.spongepowered.asm.mixin.Final;
 /*import net.minecraft.client.gui.widget.GridWidget;
 import com.llamalad7.mixinextras.sugar.Local;
 import org.spongepowered.asm.mixin.Final;
+*///?} else {
+/*import org.spongepowered.asm.mixin.injection.Redirect;
 *///?}
 
 @Mixin(DisconnectedScreen.class)
@@ -41,33 +43,47 @@ public abstract class DisconnectedScreenMixin extends Screen {
     }
 
     @Inject(method = "init", at = @At("HEAD"))
-    private void injectInit(CallbackInfo ci) {
+    private void autoRelog$injectInit(CallbackInfo ci) {
         Reconnect.getInstance().startReconnecting();
     }
 
     //? >= 1.20.2 {
     @Inject(method = "init", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/widget/DirectionalLayoutWidget;add(Lnet/minecraft/client/gui/widget/Widget;)Lnet/minecraft/client/gui/widget/Widget;", ordinal = 2))
-    private void injectReconnectButton(CallbackInfo ci) {
+    private void autoRelog$injectReconnectButton(CallbackInfo ci) {
     //?} else if >= 1.20 {
     /*@Inject(method = "init", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/widget/GridWidget$Adder;add(Lnet/minecraft/client/gui/widget/Widget;)Lnet/minecraft/client/gui/widget/Widget;", ordinal = 2))
-    private void injectReconnectButton(CallbackInfo ci, @Local GridWidget.Adder adder) {
+    private void autoRelog$injectReconnectButton(CallbackInfo ci, @Local GridWidget.Adder adder) {
     *///?} else {
     /*@Inject(method = "init", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/DisconnectedScreen;addDrawableChild(Lnet/minecraft/client/gui/Element;)Lnet/minecraft/client/gui/Element;"))
-    private void injectReconnectButton(CallbackInfo ci) {
+    private void autoRelog$injectReconnectButton(CallbackInfo ci) {
     *///?}
         if (Reconnect.getInstance().hasAddress()) {
-            ButtonWidget widget = ReconnectButtonWidget.builder().width(200).build();
+            ButtonWidget widget = new ReconnectButtonWidget();
             //? >=1.20.2 {
             this.grid.add(widget);
-            //?} else if > 1.20 {
+            //?} else if >= 1.20 {
             /*adder.add(widget);
-            *///?} else {
-            /*int addedReasonHeight = widget.getHeight() - 9;
-            widget.setX(this.width / 2 - (widget.getWidth() / 2));
-            widget.setY(Math.min(this.height / 2 + this.reasonHeight / 2 - addedReasonHeight, this.height - 30));
+            *///?} else if >= 1.19.3 {
+            /*widget.setX(this.width / 2 - (widget.getWidth() / 2));
+            widget.setY(Math.min(this.height / 2 + this.reasonHeight / 2 + 9, this.height - 30));
             this.addDrawableChild(widget);
-            this.reasonHeight += addedReasonHeight*2;
+            *///?} else {
+            /*widget.x = this.width / 2 - (widget.getWidth() / 2);
+            widget.y = Math.min(this.height / 2 + this.reasonHeight / 2 + 9, this.height - 30);
+            this.addDrawableChild(widget);
             *///?}
         }
     }
+
+
+    //? < 1.20 {
+    /*/^
+     * Correct the location of the existing buttons in the disconnect screen for 1.19.x and lower
+     ^/
+    @Redirect(method = "init", at = @At(value = "INVOKE", target = "Ljava/lang/Math;min(II)I"))
+    private int autoRelog$correctButtonYLevel(int a, int b) {
+        int autorelogButtonHeight = 24;
+        return Math.min(this.height / 2 + this.reasonHeight / 2 + 9 + autorelogButtonHeight, b);
+    }
+    *///?}
 }

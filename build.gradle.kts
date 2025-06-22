@@ -89,8 +89,6 @@ dependencies {
 }
 
 loom {
-    accessWidenerPath = file("../../src/main/resources/aw/autorelog.accesswidener")
-
     decompilers {
         get("vineflower").apply { // Adds names to lambdas - useful for mixins
             options.put("mark-corresponding-synthetics", "1")
@@ -124,22 +122,16 @@ tasks {
 }
 
 tasks.processResources {
-    // Fabric's mod id changed in 1.19.3, but we can still use the old one: https://fabricmc.net/2022/11/24/1193.html
-    // By using "fabric" for all <1.20 versions we can avoid splitting up 1.19
-    val fabricKey = if (stonecutter.eval(mcVersion, ">=1.19.3")) "fabric-api" else "fabric"
-
     inputs.property("id", mod.id)
     inputs.property("name", mod.name)
     inputs.property("version", mod.version)
     inputs.property("mcdep", mcDep)
-    inputs.property("fabrickey", fabricKey)
 
     val map = mapOf(
         "id" to mod.id,
         "name" to mod.name,
         "version" to mod.version,
         "mcdep" to mcDep,
-        "fabrickey" to fabricKey,
     )
 
     filesMatching("fabric.mod.json") { expand(map) }
