@@ -104,7 +104,7 @@ public class Reconnect {
     }
 
     public void join(ClientPlayNetworkHandler handler) {
-        server = handler.getServerInfo();
+        server = /*? >= 1.19.3 {*/handler.getServerInfo();/*?} else {*//*MinecraftClient.getInstance().getCurrentServerEntry();*//*?}*/
         if (server != null) {
             // If server is null this is single player, so don't parse it.
             address = ServerAddress.parse(server.address);
