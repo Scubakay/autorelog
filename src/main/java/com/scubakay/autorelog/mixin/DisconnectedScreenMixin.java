@@ -6,7 +6,6 @@ import net.minecraft.client.gui.screen.DisconnectedScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.Text;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -15,20 +14,26 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 //? >= 1.20.2 {
 import net.minecraft.client.gui.widget.DirectionalLayoutWidget;
-//?} else {
+import org.spongepowered.asm.mixin.Final;
+//?} else if >= 1.20 {
 /*import net.minecraft.client.gui.widget.GridWidget;
-import net.minecraft.client.gui.widget.TextWidget;
 import com.llamalad7.mixinextras.sugar.Local;
+import org.spongepowered.asm.mixin.Final;
 *///?}
 
 @Mixin(DisconnectedScreen.class)
 public abstract class DisconnectedScreenMixin extends Screen {
+    //? >= 1.20.2 {
     @Final
     @Shadow
-    //? >= 1.20.2 {
     private DirectionalLayoutWidget grid;
-    //?} else {
-    /*private GridWidget grid;
+    //?} else if >= 1.20 {
+    /*@Final
+    @Shadow
+    private GridWidget grid;
+    *///?} else {
+    /*@Shadow
+    private int reasonHeight;
     *///?}
 
     protected DisconnectedScreenMixin(Text title) {
@@ -43,13 +48,26 @@ public abstract class DisconnectedScreenMixin extends Screen {
     //? >= 1.20.2 {
     @Inject(method = "init", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/widget/DirectionalLayoutWidget;add(Lnet/minecraft/client/gui/widget/Widget;)Lnet/minecraft/client/gui/widget/Widget;", ordinal = 2))
     private void injectReconnectButton(CallbackInfo ci) {
-    //?} else {
+    //?} else if >= 1.20 {
     /*@Inject(method = "init", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/widget/GridWidget$Adder;add(Lnet/minecraft/client/gui/widget/Widget;)Lnet/minecraft/client/gui/widget/Widget;", ordinal = 2))
     private void injectReconnectButton(CallbackInfo ci, @Local GridWidget.Adder adder) {
+    *///?} else {
+    /*@Inject(method = "init", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/DisconnectedScreen;addDrawableChild(Lnet/minecraft/client/gui/Element;)Lnet/minecraft/client/gui/Element;"))
+    private void injectReconnectButton(CallbackInfo ci) {
     *///?}
         if (Reconnect.getInstance().hasAddress()) {
             ButtonWidget widget = ReconnectButtonWidget.builder().width(200).build();
-            /*? >=1.20.2 {*/this.grid/*?} else {*//*adder*//*?}*/.add(widget);
+            //? >=1.20.2 {
+            this.grid.add(widget);
+            //?} else if > 1.20 {
+            /*adder.add(widget);
+            *///?} else {
+            /*int addedReasonHeight = widget.getHeight() - 9;
+            widget.setX(this.width / 2 - (widget.getWidth() / 2));
+            widget.setY(Math.min(this.height / 2 + this.reasonHeight / 2 - addedReasonHeight, this.height - 30));
+            this.addDrawableChild(widget);
+            this.reasonHeight += addedReasonHeight*2;
+            *///?}
         }
     }
 }
