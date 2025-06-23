@@ -13,10 +13,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(GameMenuScreen.class)
 public class GameMenuScreenMixin {
-    //? >= 1.19.3 {
+    //? >= 1.21.6 {
     @Inject(method = "disconnect", at = @At("HEAD"))
+    private static void injectDisconnect(CallbackInfo ci) {
+    //?} else >= 1.19.3 {
+    /*@Inject(method = "disconnect", at = @At("HEAD"))
     private void injectDisconnect(CallbackInfo ci) {
-    //?} else {
+    *///?} else {
     /*@Inject(method = "method_19836", at = @At("HEAD"))
     private void injectDisconnect(ButtonWidget button, CallbackInfo ci) {
     *///?}

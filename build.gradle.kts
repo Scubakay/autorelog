@@ -95,10 +95,15 @@ loom {
         }
     }
 
-    runConfigs.all {
-        ideConfigGenerated(true)
-        vmArgs("-Dmixin.debug.export=true")
-        runDir = "../../run"
+    runs {
+        create("Minecraft Client") {
+            client()
+            ideConfigGenerated(true)
+            runDir = "../../run"
+            name = "Minecraft Client"
+            vmArgs("-Dmixin.debug.export=true")
+            property("fabric.mcVersion", mcVersion)
+        }
     }
 }
 
@@ -144,26 +149,6 @@ tasks.register<Copy>("buildAndCollect") {
     dependsOn("build")
 }
 
-if (stonecutter.current.isActive) {
-    rootProject.tasks.register("Run Active Client") {
-        group = "stonecutter"
-        dependsOn(tasks.named("runClient"))
-    }
-
-    loom {
-        runs {
-            create("Run Active Client") {
-                client()
-                ideConfigGenerated(true)
-                runDir = "../../run"
-                name = "Run Active Client"
-                vmArgs("-Dmixin.debug.export=true")
-                property("fabric.mcVersion", mcVersion)
-            }
-        }
-    }
-}
-
 publishMods {
     fun versionList(prop: String) = findProperty(prop)?.toString()
         ?.split("\\s+".toRegex())
@@ -174,13 +159,13 @@ publishMods {
 
     file = tasks.remapJar.get().archiveFile
     additionalFiles.from(tasks.remapSourcesJar.get().archiveFile)
-    displayName = "${mod.name} ${mod.version} for $mcVersion"
+    displayName = "${mod.name} ${mod.version} for ${mod.title}"
     version = mod.version
     changelog = rootProject.file("CHANGELOG.md").readText()
     type = STABLE
     modLoaders.add("fabric")
 
-    dryRun = !publish && providers.environmentVariable("MODRINTH_TOKEN")
+    dryRun = !publish || providers.environmentVariable("MODRINTH_TOKEN")
         .getOrNull() == null
     // || providers.environmentVariable("CURSEFORGE_TOKEN").getOrNull() == null
 
