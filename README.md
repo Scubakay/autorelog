@@ -14,16 +14,16 @@ When getting disconnected from a server with AutoRelog active (see AFK Detection
 the disconnect screen will show a button with a countdown before it will try to 
 automatically reconnect to the server:
 
-![reconnectinginxseconds.png](https://github.com/Scubakay/autorelog/tree/master/docs/img/reconnectinginxseconds.png)
+![reconnectinginxseconds.png](https://github.com/Scubakay/autorelog/blob/master/docs/img/reconnectinginxseconds.png?raw=true)
 
 Hovering on the button will give you the option to try reconnecting right away. 
 This can be used if you know the server is accessible again before the countdown is over:
 
-![reconnectnow.png](https://github.com/Scubakay/autorelog/tree/master/docs/img/reconnectnow.png)
+![reconnectnow.png](https://github.com/Scubakay/autorelog/blob/master/docs/img/reconnectnow.png?raw=true)
 
 When AutoRelog is trying to reconnect the button becomes inactive:
 
-![reconnecting.png](https://github.com/Scubakay/autorelog/tree/master/docs/img/reconnecting.png)
+![reconnecting.png](https://github.com/Scubakay/autorelog/blob/master/docs/img/reconnecting.png?raw=true)
 
 ## AFK Detection
 
