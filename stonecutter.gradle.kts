@@ -6,7 +6,7 @@ plugins {
 }
 stonecutter active "dev" /* [SC] DO NOT EDIT */
 
-stonecutter.tasks {
+stonecutter tasks {
     // Order publishing: https://stonecutter.kikugie.dev/blog/changes/0.7.html#_0-7-alpha-21
-    order(named("publishMods"))
+    order("publishMods")
 }
