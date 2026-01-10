@@ -1,4 +1,3 @@
 # Features
-- 1.21.6 support!
-- Connecting countdown moved to button
-- Clicking the button skips the countdown and attempts to reconnect immediately
+- 1.21.8 - 1.21.11 support!
+- Fix an issue with the fabric api dependency for <1.19.3

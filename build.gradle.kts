@@ -157,6 +157,10 @@ java {
 }
 
 tasks.processResources {
+    // Fabric's mod id changed in 1.19.3, but we can still use the old one: https://fabricmc.net/2022/11/24/1193.html
+    // By using "fabric" for all <1.20 versions we can avoid splitting up 1.19
+    val fabricKey = if (stonecutter.eval(env.version, ">=1.20")) "fabric-api" else "fabric"
+
     inputs.property("version", mod.version)
     inputs.property("id", mod.id)
     inputs.property("name", mod.name)
@@ -166,6 +170,7 @@ tasks.processResources {
     inputs.property("repository", mod.repository)
     inputs.property("discord", mod.discord)
     inputs.property("range", env.range)
+    inputs.property("fabricKey", fabricKey)
 
     val map = mapOf(
         "version" to mod.version,
@@ -177,6 +182,7 @@ tasks.processResources {
         "repository" to mod.repository,
         "discord" to mod.discord,
         "range" to env.range,
+        "fabrickey" to fabricKey,
     )
 
     filesMatching("fabric.mod.json") { expand(map) }
