@@ -3,7 +3,7 @@
   "id": "${id}",
   "version": "${version}",
   "name": "${name}",
-  "description": "Reconnect automatically to a restarting Minecraft server when AFK!",
+  "description": "${description}",
   "authors": [
     "Scubakay"
   ],
@@ -13,24 +13,28 @@
     "x3rt"
   ],
   "contact": {
-    "homepage": "https://modrinth.com/mod/autorelog",
-    "sources": "https://github.com/Scubakay/autorelog",
-    "issues": "https://github.com/Scubakay/autorelog/issues"
+    "homepage": "${homepage}",
+    "sources": "${repository}",
+    "issues": "${repository}/issues"
+  },
+  "custom": {
+    "modmenu": {
+      "links": {
+        "modmenu.discord": "${discord}"
+      }
+    }
   },
   "license": "MIT",
-  "icon": "assets/autorelog/icon.png",
+  "icon": "assets/${id}/icon.png",
   "environment": "client",
   "entrypoints": {
     "client": [
       "com.scubakay.autorelog.AutoRelogClient"
     ]
   },
-  "mixins": [
-    "autorelog.mixins.json"
-  ],
   "depends": {
-    "fabricloader": ">=0.15",
-    "minecraft": "${mcdep}",
-    "fabric": "*"
+    "fabricloader": ">=0.16",
+    "minecraft": "${range}",
+    "fabric-api": "*"
   }
 }

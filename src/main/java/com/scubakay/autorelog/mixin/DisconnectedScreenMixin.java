@@ -23,6 +23,7 @@ import org.spongepowered.asm.mixin.Final;
 /*import org.spongepowered.asm.mixin.injection.Redirect;
 *///?}
 
+@SuppressWarnings("UnusedMixin")
 @Mixin(DisconnectedScreen.class)
 public abstract class DisconnectedScreenMixin extends Screen {
     //? >= 1.20.2 {

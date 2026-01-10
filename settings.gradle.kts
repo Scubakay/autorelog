@@ -8,17 +8,25 @@ pluginManagement {
 }
 
 plugins {
-    id("dev.kikugie.stonecutter") version "0.7-beta.3"
+    id("dev.kikugie.stonecutter") version "0.7.10"
 }
+
+val devVersion: String = providers.gradleProperty("settings.devVersion").orNull
+    ?: error("devVersion property not found in gradle.properties")
+val versions: List<String> = providers.gradleProperty("settings.versions").orNull
+    ?.split(",")
+    ?.map { it.trim() }
+    ?: error("settings.versions property not found in gradle.properties")
 
 stonecutter {
     kotlinController = true
     centralScript = "build.gradle.kts"
 
     shared {
-        vers("dev", "1.21.7")
-        versions("1.21.6", "1.21", "1.20.5", "1.20.2", "1.20", "1.19.3", "1.19")
-        vcsVersion = "dev"
+        version("dev", devVersion)
+        versions(*versions.toTypedArray())
+        vcsVersion = providers.gradleProperty("settings.vcsVersion").orNull
+            ?: error("vcsVersion property not found in gradle.properties")
     }
     create(rootProject)
 }

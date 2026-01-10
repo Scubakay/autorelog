@@ -7,6 +7,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+@SuppressWarnings("UnusedMixin")
 @Mixin(MultiplayerScreen.class)
 public class MultiplayerScreenMixin {
     @Inject(method = "init", at = @At("HEAD"))

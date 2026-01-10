@@ -3,14 +3,6 @@
   "minVersion": "0.8",
   "package": "com.scubakay.autorelog.mixin",
   "compatibilityLevel": "JAVA_17",
-  "mixins": [
-  ],
-  "client": [
-    "DisconnectedScreenMixin",
-    "GameMenuScreenMixin",
-    "ClientPlayerEntityMixin",
-    "MultiplayerScreenMixin"
-  ],
   "injectors": {
     "defaultRequire": 1
   }
