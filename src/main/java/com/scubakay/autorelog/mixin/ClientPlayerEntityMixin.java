@@ -1,7 +1,9 @@
 package com.scubakay.autorelog.mixin;
 
+import com.scubakay.autorelog.AutoRelogClient;
 import com.scubakay.autorelog.config.Config;
 import com.scubakay.autorelog.util.AfkMode;
+import com.scubakay.autorelog.util.Logging;
 import com.scubakay.autorelog.util.Reconnect;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.input.Input;
@@ -31,7 +33,13 @@ public abstract class ClientPlayerEntityMixin {
     private void detectInput(CallbackInfo ci) {
         if(lastInput == 0) lastInput = System.currentTimeMillis();
         boolean isSinglePlayer = MinecraftClient.getInstance().isInSingleplayer();
-        if (Config.mode == AfkMode.MANUAL || isSinglePlayer) return;
+        if (Config.mode == AfkMode.MANUAL || isSinglePlayer) {
+            if (Config.logging == Logging.ENABLED) {
+                AutoRelogClient.LOGGER.info("Mode: " + Config.mode);
+                AutoRelogClient.LOGGER.info("SinglePlayer: " + isSinglePlayer);
+            }
+            return;
+        }
         checkIsAfk(input.getMovementInput());
     }
 

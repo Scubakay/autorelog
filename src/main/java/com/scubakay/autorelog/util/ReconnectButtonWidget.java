@@ -8,7 +8,7 @@ import net.minecraft.util.Formatting;
 import java.util.function.Supplier;
 //?}
 
-public class ReconnectButtonWidget extends ButtonWidget/*? >=1.21.11 {*/.Text/*? }*/ {
+public class ReconnectButtonWidget extends ButtonWidget/*? >=1.21.11 {*/.Text/*?}*/ {
     private final Reconnect reconnect;
 
     public ReconnectButtonWidget() {

@@ -2,6 +2,7 @@ package com.scubakay.autorelog.util;
 
 import com.scubakay.autorelog.AutoRelogClient;
 import com.scubakay.autorelog.config.Config;
+import lombok.Getter;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.TitleScreen;
@@ -19,13 +20,15 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class Reconnect {
+    @Getter private boolean active = false;
+    @Getter private boolean reconnecting = false;
+    @Getter private int countdown = -1;
+
     private ServerInfo server;
     private ServerAddress address;
     private Timer timer;
-    private boolean active = false;
-    private boolean reconnecting = false;
+
     private int attemptsLeft = 0;
-    private int countdown = -1;
 
     public static void registerJoinEvent(ClientPlayNetworkHandler handler, PacketSender ignoredPacketSender, MinecraftClient ignoredMinecraftClient) {
         Reconnect.getInstance().join(handler);
@@ -46,18 +49,6 @@ public class Reconnect {
 
     public boolean hasAddress() {
         return address != null;
-    }
-
-    public boolean isActive() {
-        return active;
-    }
-
-    public int getCountdown() {
-        return countdown;
-    }
-
-    public boolean isReconnecting() {
-        return reconnecting;
     }
 
     public void activate() {
@@ -104,16 +95,22 @@ public class Reconnect {
     }
 
     public void join(ClientPlayNetworkHandler handler) {
-        server = /*? >= 1.19.3 {*/handler.getServerInfo();/*?} else {*//*MinecraftClient.getInstance().getCurrentServerEntry();*//*?}*/
-        if (server != null) {
-            // If server is null this is single player, so don't parse it.
-            address = ServerAddress.parse(server.address);
-        }
+        getServerAddress(handler);
         if (active) {
             reconnecting = false;
             if (Config.logging == Logging.ENABLED) AutoRelogClient.LOGGER.info("Relogged to server successfully!");
             timer.cancel();
         }
+    }
+
+    private void getServerAddress(ClientPlayNetworkHandler handler) {
+        //? >= 1.19.3 {
+            server = handler.getServerInfo();
+        //?} else {
+            /*server = MinecraftClient.getInstance().getCurrentServerEntry();
+        *///?}
+
+        address = server == null ? null : ServerAddress.parse(server.address);
     }
 
     private void scheduleReconnect() {

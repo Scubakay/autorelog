@@ -1,41 +1,22 @@
 package com.scubakay.autorelog.mixin;
 
 import com.scubakay.autorelog.util.Reconnect;
-import net.minecraft.client.MinecraftClient;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import net.minecraft.client.gui.screen.GameMenuScreen;
-import org.spongepowered.asm.mixin.injection.Redirect;
-
-//? >= 1.20.6 {
-import net.minecraft.text.Text;
-//?} else {
-/*import net.minecraft.client.gui.screen.Screen;
-*///?}
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import net.minecraft.client.gui.widget.ButtonWidget;
 
 @SuppressWarnings("UnusedMixin")
 @Mixin(GameMenuScreen.class)
 public class GameMenuScreenMixin {
-    //? >= 1.20.6 {
-    @Redirect(
-            method = "method_72129",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/client/MinecraftClient;disconnect(Lnet/minecraft/text/Text;)V"
-            )
-    )
-    private void redirectDisconnect(MinecraftClient client, Text reason) {
-    //?} else {
-    /*@Redirect(
+    @Inject(
             method = "method_19836",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/client/MinecraftClient;disconnect(Lnet/minecraft/client/gui/screen/Screen;)V"
-            )
+            at = @At("HEAD")
     )
-    private void redirectDisconnect(MinecraftClient client, Screen reason) {
-    *///?}
+    private void autoRelog$disconnect(ButtonWidget button, CallbackInfo ci) {
         Reconnect.getInstance().deactivate();
-        client.disconnect(reason);
     }
 }

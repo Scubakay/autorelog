@@ -26,19 +26,6 @@ import org.spongepowered.asm.mixin.Final;
 @SuppressWarnings("UnusedMixin")
 @Mixin(DisconnectedScreen.class)
 public abstract class DisconnectedScreenMixin extends Screen {
-    //? >= 1.20.2 {
-    @Final
-    @Shadow
-    private DirectionalLayoutWidget grid;
-    //?} else if >= 1.20 {
-    /*@Final
-    @Shadow
-    private GridWidget grid;
-    *///?} else {
-    /*@Shadow
-    private int reasonHeight;
-    *///?}
-
     protected DisconnectedScreenMixin(Text title) {
         super(title);
     }
@@ -49,37 +36,57 @@ public abstract class DisconnectedScreenMixin extends Screen {
     }
 
     //? >= 1.20.2 {
+
+    @Final
+    @Shadow
+    private DirectionalLayoutWidget grid;
+
     @Inject(method = "init", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/widget/DirectionalLayoutWidget;add(Lnet/minecraft/client/gui/widget/Widget;)Lnet/minecraft/client/gui/widget/Widget;", ordinal = 2))
     private void autoRelog$injectReconnectButton(CallbackInfo ci) {
-    //?} else if >= 1.20 {
-    /*@Inject(method = "init", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/widget/GridWidget$Adder;add(Lnet/minecraft/client/gui/widget/Widget;)Lnet/minecraft/client/gui/widget/Widget;", ordinal = 2))
-    private void autoRelog$injectReconnectButton(CallbackInfo ci, @Local GridWidget.Adder adder) {
-    *///?} else {
-    /*@Inject(method = "init", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/DisconnectedScreen;addDrawableChild(Lnet/minecraft/client/gui/Element;)Lnet/minecraft/client/gui/Element;"))
-    private void autoRelog$injectReconnectButton(CallbackInfo ci) {
-    *///?}
         if (Reconnect.getInstance().hasAddress()) {
             ButtonWidget widget = new ReconnectButtonWidget();
-            //? >=1.20.2 {
             this.grid.add(widget);
-            //?} else if >= 1.20 {
-            /*adder.add(widget);
-            *///?} else if >= 1.19.3 {
-            /*widget.setX(this.width / 2 - (widget.getWidth() / 2));
-            widget.setY(Math.min(this.height / 2 + this.reasonHeight / 2 + 9, this.height - 30));
-            this.addDrawableChild(widget);
-            *///?} else {
-            /*widget.x = this.width / 2 - (widget.getWidth() / 2);
-            widget.y = Math.min(this.height / 2 + this.reasonHeight / 2 + 9, this.height - 30);
-            this.addDrawableChild(widget);
-            *///?}
         }
     }
 
+    //?} else if >= 1.20 {
 
-    //? < 1.20 {
-    /*/^
-     * Correct the location of the existing buttons in the disconnect screen for 1.19.x and lower
+    /*@Final
+    @Shadow
+    private GridWidget grid;
+
+    @Inject(method = "init", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/widget/GridWidget$Adder;add(Lnet/minecraft/client/gui/widget/Widget;)Lnet/minecraft/client/gui/widget/Widget;", ordinal = 2))
+    private void autoRelog$injectReconnectButton(CallbackInfo ci, @Local GridWidget.Adder adder) {
+        if (Reconnect.getInstance().hasAddress()) {
+            ButtonWidget widget = new ReconnectButtonWidget();
+            adder.add(widget);
+        }
+    }
+
+    *///?} else {
+
+    /*@Shadow
+    private int reasonHeight;
+
+    @Inject(method = "init", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/DisconnectedScreen;addDrawableChild(Lnet/minecraft/client/gui/Element;)Lnet/minecraft/client/gui/Element;"))
+    private void autoRelog$injectReconnectButton(CallbackInfo ci) {
+        if (Reconnect.getInstance().hasAddress()) {
+            ButtonWidget widget = new ReconnectButtonWidget();
+            final int x = this.width / 2 - (widget.getWidth() / 2);
+            final int y = Math.min(this.height / 2 + this.reasonHeight / 2 + 9, this.height - 30);
+            //? >= 1.19.3 {
+            widget.setX(x);
+            widget.setY(y);
+            //?} else {
+            /^widget.x = x;
+            widget.y = y;
+            ^///?}
+            this.addDrawableChild(widget);
+        }
+    }
+
+    /^*
+     * Correct the location of the existing buttons in the disconnect screen
      ^/
     @Redirect(method = "init", at = @At(value = "INVOKE", target = "Ljava/lang/Math;min(II)I"))
     private int autoRelog$correctButtonYLevel(int a, int b) {
