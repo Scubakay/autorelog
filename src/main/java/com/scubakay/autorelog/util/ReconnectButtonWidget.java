@@ -8,12 +8,15 @@ import net.minecraft.util.Formatting;
 import java.util.function.Supplier;
 //?}
 
-public class ReconnectButtonWidget extends ButtonWidget/*? >=1.21.11 {*/.Text/*?}*/ {
-    private final Reconnect reconnect;
+public class ReconnectButtonWidget extends /*? >=1.21.11 {*/ButtonWidget.Text/*?} else {*//*ButtonWidget*//*?}*/ {
+    private final Reconnect reconnect = Reconnect.getInstance();
 
     public ReconnectButtonWidget() {
-        super(0, 0, 200, 20, net.minecraft.text.Text.empty(), (button) -> MinecraftClient.getInstance().execute(Reconnect.getInstance()::connect) /*? >=1.19.3 {*/, Supplier::get/*?}*/);
-        reconnect = Reconnect.getInstance();
+        super(0, 0, 200, 20,
+                net.minecraft.text.Text.empty(),
+                (button) -> MinecraftClient.getInstance().execute(Reconnect.getInstance()::connect)
+                /*? >=1.19.3 {*/, Supplier::get/*?}*/
+        );
     }
 
     @Override
