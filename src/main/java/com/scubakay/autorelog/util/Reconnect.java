@@ -9,7 +9,7 @@ import net.minecraft.client.gui.screen.TitleScreen;
 import net.minecraft.client.gui.screen.multiplayer.MultiplayerScreen;
 import net.minecraft.client.network.*;
 
-//? >= 1.20.5 {
+//? >= 1.20.3 {
 import net.minecraft.client.gui.screen.multiplayer.ConnectScreen;
 //?} else {
 /*import net.minecraft.client.gui.screen.ConnectScreen;
